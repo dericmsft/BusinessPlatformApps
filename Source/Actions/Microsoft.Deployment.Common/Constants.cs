@@ -69,5 +69,6 @@
         // ADL
         public static string MicrosoftADLClientId = string.Empty;
         public static string MicrosoftADLClientSecret = string.Empty;
+        public static string MSFTTenant = string.Empty;
     }
 }

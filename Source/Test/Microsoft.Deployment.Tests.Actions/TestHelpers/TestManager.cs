@@ -73,7 +73,7 @@ namespace Microsoft.Deployment.Tests.Actions.TestHelpers
 
             var subscriptionResult = await TestManager.ExecuteActionAsync("Microsoft-GetAzureSubscriptions", dataStore);
             Assert.IsTrue(subscriptionResult.IsSuccess);
-            var subscriptionId = subscriptionResult.Body.GetJObject()["value"].SingleOrDefault(p => p["DisplayName"].ToString().StartsWith("PBI_"));
+            var subscriptionId = subscriptionResult.Body.GetJObject()["value"].SingleOrDefault(p => p["DisplayName"].ToString().StartsWith("Catdor"));
             dataStore.AddToDataStore("SelectedSubscription", subscriptionId, DataStoreType.Public);
 
             var locationResult = await TestManager.ExecuteActionAsync("Microsoft-GetLocations", dataStore);
