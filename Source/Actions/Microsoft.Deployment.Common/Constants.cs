@@ -65,5 +65,9 @@
         public const string SocialGistProvisionKeyUrl = "https://api.boardreader.com/v1/Keys/List";
         public static string SocialGistProvisionKeyUserName = string.Empty;
         public static string SocialGistProvisionKeyPassphrase = string.Empty;
+
+        // ADL
+        public static string MicrosoftADLClientId = string.Empty;
+        public static string MicrosoftADLClientSecret = string.Empty;
     }
 }
