@@ -23,11 +23,6 @@ namespace Microsoft.Deployment.Actions.AzureCustom.Common
             var resourceGroup = request.DataStore.GetValue("SelectedResourceGroup");
             var location = request.DataStore.GetJson("SelectedLocation", "Name");
 
-            if (request.Info.AppName.Contains("CDSA"))
-            {
-                location = "centralus";
-            }
-
             SubscriptionCloudCredentials creds = new TokenCloudCredentials(subscription, azureToken);
             Microsoft.Azure.Management.Resources.ResourceManagementClient client = new ResourceManagementClient(creds);
             /*var existsResourceGroup = await client.ResourceGroups.CheckExistenceAsync(resourceGroup, new CancellationToken());

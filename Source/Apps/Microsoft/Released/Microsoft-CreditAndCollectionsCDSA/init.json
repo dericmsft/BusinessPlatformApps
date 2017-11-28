@@ -167,8 +167,7 @@
                 "DeploymentName": "SqlConnectionDeployment",
                 "displayname": "$translate(NOTIFIER_CREATING_DATABASE_CONNECTION)",
                 "name": "Microsoft-CreateSqlConnector",
-                "ApiConnectionName": "$save('sqlNotifierConnection')",
-                "ConnectorLocation": "$save('centralus')"
+                "ApiConnectionName": "$save('sqlNotifierConnection')"
             },
             {
                 "DeploymentName": "LogicApp",
@@ -185,7 +184,8 @@
                 "DeploymentName": "SqlConnectionDeployment",
                 "displayname": "$translate(NOTIFIER_CREATING_DATABASE_CONNECTION)",
                 "name": "Microsoft-CreateSqlConnector",
-                "ApiConnectionName": "$save('sqldatabase')"
+                "ApiConnectionName": "$save('sqldatabase')",
+                "ConnectorLocation": "centralus"
             },
             {
                 "DeploymentName": "LogicApp",

@@ -31,6 +31,11 @@ namespace Microsoft.Deployment.Actions.AzureCustom.Common
                 location = "brazilsouth";
             }
 
+            if (request.Info.AppName.ToLower().Contains("cdsa") &&  (connectorName == "azuredatalake" || connectorName == "sql"))
+            {
+                location = "centralus";
+            }
+
             //Needs to be changed once Logic Apps makes it available
             //if (connectorName == "azuredatalake" || connectorName == "dynamicsax")
             //{
