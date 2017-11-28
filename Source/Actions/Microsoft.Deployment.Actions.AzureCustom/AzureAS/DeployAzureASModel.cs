@@ -19,6 +19,13 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
             var azureToken = request.DataStore.GetJson("AzureTokenAS");
             string serverUrl = request.DataStore.GetValue("ASServerUrl");
 
+            string connectionType = request.DataStore.GetValue("ConnectionType");
+
+            if(connectionType == "azure-data-lake")
+            {
+
+            }
+
             string xmla = request.DataStore.GetValue("xmlaFilePath");
             string asDatabase = request.DataStore.GetValue("ASDatabase");
             string sqlConnectionString = request.DataStore.GetValue("SqlConnectionString");

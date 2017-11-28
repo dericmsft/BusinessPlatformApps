@@ -211,7 +211,8 @@
                 "name": "Microsoft-DeployAzureASModel",
                 "skip": "$run(this.MS.DataStore.getValue('ssasDisabled') === 'true' ? 'true': 'false')",
                 "SqlConnectionString": "$dsall(SqlConnectionString)[0]",
-                "xmlaFilePath": "Service/AzureAS/CreditAndCollections.xmla"
+                "xmlaFilePath": "Service/AzureAS/CreditAndCollections.xmla",
+                "ConnectionType": "azure-data-lake"
             },
             {
                 "DeploymentName": "ASFunction",

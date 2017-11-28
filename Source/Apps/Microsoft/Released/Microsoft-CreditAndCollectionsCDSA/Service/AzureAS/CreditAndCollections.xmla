@@ -2,804 +2,220 @@
     "create": {
         "database": {
             "name": "CreditCollections",
-            "compatibilityLevel": 1200,
+            "compatibilityLevel": 1400,
             "model": {
                 "culture": "en-US",
                 "dataSources": [
                     {
-                        "name": "CreditCollectionDataSource",
-                        "connectionString": "Provider=SQLNCLI11;Data Source=server.database.windows.net;Initial Catalog=CreditAndCollections;User ID=pbiadmin;Persist Security Info=true",
-                        "impersonationMode": "impersonateServiceAccount",
-                        "annotations": [
-                            {
-                                "name": "ConnectionEditUISource",
-                                "value": "SqlServer"
+                        "type": "structured",
+                        "name": "dataLakeStore",
+                        "connectionDetails": {
+                            "protocol": "data-lake-store",
+                            "address": {
+                                "url": "https://cdsamock.azuredatalakestore.net"
                             }
-                        ]
+                        },
+                        "credential": {
+                            "AuthenticationKind": "OAuth2",
+                            "kind": "DataLake",
+                            "path": "https://cdsamock.azuredatalakestore.net/",
+                            "Expires": null,
+                            "RefreshToken": "********",
+                            "token_type": "********",
+                            "scope": "********",
+                            "ext_expires_in": "********",
+                            "expires_on": "********",
+                            "not_before": "********",
+                            "resource": "********",
+                            "id_token": "********"
+                        }
                     }
                 ],
                 "tables": [
                     {
+                        "name": "Customer dimension",
+                        "columns": [
+                            {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "COMPANY",
+                                "dataType": "string",
+                                "sourceColumn": "COMPANY"
+                            },
+                            {
+                                "name": "BLOCKED_VALUE",
+                                "dataType": "int64",
+                                "sourceColumn": "BLOCKED_VALUE"
+                            },
+                            {
+                                "name": "COUNTY",
+                                "dataType": "string",
+                                "sourceColumn": "COUNTY"
+                            },
+                            {
+                                "name": "STATE",
+                                "dataType": "string",
+                                "sourceColumn": "STATE"
+                            },
+                            {
+                                "name": "CITY",
+                                "dataType": "string",
+                                "sourceColumn": "CITY"
+                            },
+                            {
+                                "name": "PARTITION",
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
+                            },
+                            {
+                                "name": "ROW_UNIQUEKEY",
+                                "dataType": "int64",
+                                "sourceColumn": "ROW_UNIQUEKEY"
+                            },
+                            {
+                                "name": "BLOCKED",
+                                "dataType": "string",
+                                "sourceColumn": "BLOCKED"
+                            },
+                            {
+                                "name": "Customer account",
+                                "dataType": "string",
+                                "sourceColumn": "Customer account"
+                            },
+                            {
+                                "name": "Customer group",
+                                "dataType": "string",
+                                "sourceColumn": "Customer group"
+                            },
+                            {
+                                "name": "Credit rating",
+                                "dataType": "string",
+                                "sourceColumn": "Credit rating"
+                            },
+                            {
+                                "name": "Country/Region",
+                                "dataType": "string",
+                                "sourceColumn": "Country/Region"
+                            },
+                            {
+                                "name": "District",
+                                "dataType": "string",
+                                "sourceColumn": "District"
+                            },
+                            {
+                                "name": "Zip/Postal code",
+                                "dataType": "string",
+                                "sourceColumn": "Zip/Postal code"
+                            },
+                            {
+                                "name": "Company1",
+                                "dataType": "string",
+                                "sourceColumn": "Company1"
+                            }
+                        ],
+                        "partitions": [
+                            {
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustTable = Source{[Name=\"CustCollectionsBIMeasurements_CustTable\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustTable1 = CustCollectionsBIMeasurements_CustTable{[Name=\"CustCollectionsBIMeasurements_CustTable\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustTable1,[Delimiter=\",\", Columns=17, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"ACCOUNTNUM\", type text}, {\"COMPANY\", type text}, {\"CUSTGROUP\", type text}, {\"CREDITRATING\", type text}, {\"BLOCKED_VALUE\", Int64.Type}, {\"GEOGRAPHICLOCATION\", type text}, {\"COUNTY\", type text}, {\"STATE\", type text}, {\"CITY\", type text}, {\"DISTRICTNAME\", type text}, {\"ZIPCODE\", type text}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"ROW_UNIQUEKEY\", Int64.Type}, {\"BLOCKED\", type text}}),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"ACCOUNTNUM\", \"Customer account\"}, {\"BLOCKED\", \"Blocked\"}, {\"CITY\", \"City\"}, {\"COMPANY\", \"Company\"}, {\"COUNTY\", \"County\"}, {\"CREDITRATING\", \"Credit rating\"}, {\"CUSTGROUP\", \"Customer group\"}, {\"DISTRICTNAME\", \"District\"}, {\"STATE\", \"State\"}, {\"ZIPCODE\", \"Zip/Postal code\"}, {\"DATAAREAID\", \"Company1\"}, {\"GEOGRAPHICLOCATION\", \"Country/Region\"}})",
+                                        "in",
+                                        "    #\"Renamed Columns\""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
                         "name": "Activities average days to close",
                         "columns": [
                             {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "PARTITION",
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
+                            },
+                            {
+                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
+                                "dataType": "int64",
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
+                            },
+                            {
                                 "name": "Days to close an activity",
-                                "dataType": "double",
-                                "sourceColumn": "AVERAGECLOSEDTIME",
-                                "sourceProviderType": "Numeric"
+                                "dataType": "int64",
+                                "sourceColumn": "Days to close an activity"
                             },
                             {
                                 "name": "Activity number",
-                                "dataType": "string",
-                                "sourceColumn": "NUMOFACTIVITIES",
-                                "sourceProviderType": "WChar"
+                                "dataType": "int64",
+                                "sourceColumn": "Activity number"
                             },
                             {
                                 "name": "Company",
                                 "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "Company"
                             },
                             {
                                 "name": "Customer account",
                                 "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "Customer account"
                             },
                             {
                                 "name": "Customer name",
                                 "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "Customer name"
                             },
                             {
                                 "name": "Responsible worker",
                                 "dataType": "string",
-                                "sourceColumn": "RESPONSIBLEWORKER",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
+                                "sourceColumn": "Responsible worker"
                             }
                         ],
                         "partitions": [
                             {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBIActivitiesAverageCloseTime",
+                                "name": "Partition",
                                 "dataView": "full",
                                 "source": {
-                                    "query": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIActivitiesAverageCloseTime].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIActivitiesAverageCloseTime] ",
-                                    "dataSource": "CreditCollectionDataSource"
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIActivitiesAverageCloseTime = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIActivitiesAverageCloseTime\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIActivitiesAverageCloseTime1 = CustCollectionsBIMeasurements_CustCollectionsBIActivitiesAverageCloseTime{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIActivitiesAverageCloseTime\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBIActivitiesAverageCloseTime1,[Delimiter=\",\", Columns=10, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"AVERAGECLOSEDTIME\", Int64.Type}, {\"NUMOFACTIVITIES\", Int64.Type}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"ACCOUNTNUM\", type text}, {\"CUSTOMERNAME\", type text}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}, {\"RESPONSIBLEWORKER\", type text}}),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"ACCOUNTNUM\", \"Customer account\"}, {\"AVERAGECLOSEDTIME\", \"Days to close an activity\"}, {\"DATAAREAID\", \"Company\"}, {\"CUSTOMERNAME\", \"Customer name\"}, {\"RESPONSIBLEWORKER\", \"Responsible worker\"}, {\"NUMOFACTIVITIES\", \"Activity number\"}})",
+                                        "in",
+                                        "    #\"Renamed Columns\""
+                                    ]
                                 }
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIActivitiesAverageCloseTime].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIActivitiesAverageCloseTime] "
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBIActivitiesAverageCloseTime"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Open activities",
-                        "columns": [
-                            {
-                                "name": "Activity number",
-                                "dataType": "string",
-                                "sourceColumn": "ACTIVITYNUMBER",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Responsible worker",
-                                "dataType": "string",
-                                "sourceColumn": "RESPONSIBLEWORKER",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "CATEGORY_VALUE",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CATEGORY_VALUE",
-                                "sourceProviderType": "Integer"
-                            },
-                            {
-                                "name": "Purpose",
-                                "dataType": "string",
-                                "sourceColumn": "PURPOSE",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Type",
-                                "dataType": "string",
-                                "sourceColumn": "TYPEID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Start date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "STARTDATETIME",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "End date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "ENDDATETIME",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "Category",
-                                "dataType": "string",
-                                "sourceColumn": "CATEGORY",
-                                "sourceProviderType": "WChar"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBIActivitiesOpen",
-                                "dataView": "full",
-                                "source": {
-                                    "query": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIActivitiesOpen].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIActivitiesOpen] ",
-                                    "dataSource": "CreditCollectionDataSource"
-                                }
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIActivitiesOpen].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIActivitiesOpen] "
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBIActivitiesOpen"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Aging",
-                        "columns": [
-                            {
-                                "name": "Aged balances",
-                                "dataType": "double",
-                                "sourceColumn": "AGEDBALANCES",
-                                "sourceProviderType": "Numeric"
-                            },
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Aging periods",
-                                "dataType": "string",
-                                "sourceColumn": "HEADING",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Aging period definitions",
-                                "dataType": "string",
-                                "sourceColumn": "AGINGNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "PARTITION",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "PARTITION"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances",
-                                "dataView": "full",
-                                "source": {
-                                    "query": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances]",
-                                    "dataSource": "CreditCollectionDataSource"
-                                },
-                                "annotations": [
-                                    {
-                                        "name": "QueryEditorSerialization",
-                                        "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                    }
-                                ]
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances]"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            },
-                            {
-                                "name": "QueryEditorSerialization",
-                                "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Balance due",
-                        "columns": [
-                            {
-                                "name": "Balance due",
-                                "dataType": "double",
-                                "sourceColumn": "SYSTEMCURRENCYAMOUNT",
-                                "sourceProviderType": "Numeric"
-                            },
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Due date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "DUEDATE",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Key",
-                                "dataType": "int64",
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "PARTITION",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "PARTITION"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue",
-                                "dataView": "full",
-                                "source": {
-                                    "query": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue]",
-                                    "dataSource": "CreditCollectionDataSource"
-                                },
-                                "annotations": [
-                                    {
-                                        "name": "QueryEditorSerialization",
-                                        "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                    }
-                                ]
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue]"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            },
-                            {
-                                "name": "QueryEditorSerialization",
-                                "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Case average closed time",
-                        "columns": [
-                            {
-                                "name": "Average days close",
-                                "dataType": "double",
-                                "sourceColumn": "CASEAVERAGECLOSEDTIME",
-                                "sourceProviderType": "Numeric"
-                            },
-                            {
-                                "name": "Case ID",
-                                "dataType": "string",
-                                "sourceColumn": "NUMOFCASES",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Responsible worker",
-                                "dataType": "string",
-                                "sourceColumn": "RESPONSIBLEWORKER",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBICaseAverageCloseTime",
-                                "dataView": "full",
-                                "source": {
-                                    "query": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICaseAverageCloseTime].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICaseAverageCloseTime] ",
-                                    "dataSource": "CreditCollectionDataSource"
-                                }
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICaseAverageCloseTime].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICaseAverageCloseTime] "
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBICaseAverageCloseTime"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Open cases",
-                        "columns": [
-                            {
-                                "name": "Case ID",
-                                "dataType": "string",
-                                "sourceColumn": "CASEID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Account number",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Responsible worker",
-                                "dataType": "string",
-                                "sourceColumn": "RESPONSIBLEWORKER",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Description",
-                                "dataType": "string",
-                                "sourceColumn": "DESCRIPTION",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBICasesOpen",
-                                "dataView": "full",
-                                "source": {
-                                    "query": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICasesOpen].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICasesOpen] ",
-                                    "dataSource": "CreditCollectionDataSource"
-                                }
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICasesOpen].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICasesOpen] "
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBICasesOpen"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Open collection letters",
-                        "columns": [
-                            {
-                                "name": "Collection letters",
-                                "dataType": "string",
-                                "sourceColumn": "COLLECTIONLETTERNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "PARTITION",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "PARTITION",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Print date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "PRINTDATE",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "Collection letter date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "COLLECTIONLETTERDATE",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "COLLECTIONLETTERCODE_VALUE",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "COLLECTIONLETTERCODE_VALUE",
-                                "sourceProviderType": "Integer"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "Collection letter code",
-                                "dataType": "string",
-                                "sourceColumn": "COLLECTIONLETTERCODE",
-                                "sourceProviderType": "WChar"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBICollectionLetter",
-                                "dataView": "full",
-                                "source": {
-                                    "query": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionLetter].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionLetter] ",
-                                    "dataSource": "CreditCollectionDataSource"
-                                }
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionLetter].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionLetter] "
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBICollectionLetter"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Collection letter amounts",
-                        "columns": [
-                            {
-                                "name": "Collection letter amount",
-                                "dataType": "double",
-                                "sourceColumn": "COLLECTIONLETTERAMOUNTS",
-                                "sourceProviderType": "Numeric"
-                            },
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Transaction date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "TRANSDATE",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "COLLECTIONLETTERCODE_VALUE",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "COLLECTIONLETTERCODE_VALUE",
-                                "sourceProviderType": "Integer"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Due date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "DUEDATE",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "Transactions with collection letter code",
-                                "dataType": "int64",
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "Collection letter code",
-                                "dataType": "string",
-                                "sourceColumn": "COLLECTIONLETTERCODE",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "PARTITION",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "PARTITION"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts",
-                                "dataView": "full",
-                                "source": {
-                                    "query": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts]",
-                                    "dataSource": "CreditCollectionDataSource"
-                                },
-                                "annotations": [
-                                    {
-                                        "name": "QueryEditorSerialization",
-                                        "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                    }
-                                ]
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts]"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            },
-                            {
-                                "name": "QueryEditorSerialization",
-                                "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Collection status",
-                        "columns": [
-                            {
-                                "name": "Transaction balance",
-                                "dataType": "double",
-                                "sourceColumn": "COLLECTIONSTATUSAMOUNTS",
-                                "sourceProviderType": "Numeric"
-                            },
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "PARTITION",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "PARTITION",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Collection status",
-                                "dataType": "string",
-                                "sourceColumn": "DISPUTESTATUSTRANSLATED",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Due date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "DUEDATE",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "Transaction date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "TRANSDATE",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus",
-                                "dataView": "full",
-                                "source": {
-                                    "query": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus]",
-                                    "dataSource": "CreditCollectionDataSource"
-                                },
-                                "annotations": [
-                                    {
-                                        "name": "QueryEditorSerialization",
-                                        "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                    }
-                                ]
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus]"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            },
-                            {
-                                "name": "QueryEditorSerialization",
-                                "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
                             }
                         ]
                     },
@@ -807,559 +223,69 @@
                         "name": "Customers on hold",
                         "columns": [
                             {
-                                "name": "Company",
+                                "name": "@odata.etag",
                                 "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "@odata.etag"
                             },
                             {
-                                "name": "PARTITION",
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "SALESID",
                                 "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "PARTITION",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Block type",
-                                "dataType": "string",
-                                "sourceColumn": "BLOCKSTATUS",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "Blocked",
-                                "dataType": "int64",
-                                "sourceColumn": "BLOCKED_VALUE"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBICustOnHold",
-                                "dataView": "full",
-                                "source": {
-                                    "query": [
-                                        "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICustOnHold].*",
-                                        "FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICustOnHold]"
-                                    ],
-                                    "dataSource": "CreditCollectionDataSource"
-                                },
-                                "annotations": [
-                                    {
-                                        "name": "QueryEditorSerialization",
-                                        "value": [
-                                            "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICustOnHold].*",
-                                            "FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICustOnHold]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": [
-                                    "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICustOnHold].*",
-                                    "FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICustOnHold]"
-                                ]
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBICustOnHold"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            },
-                            {
-                                "name": "QueryEditorSerialization",
-                                "value": [
-                                    "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICustOnHold].*",
-                                    "FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICustOnHold]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "name": "30 days sales outstanding",
-                        "columns": [
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer Account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "PARTITION",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "PARTITION"
-                            },
-                            {
-                                "name": "DSO30",
-                                "dataType": "double",
-                                "sourceColumn": "DSO30"
-                            },
-                            {
-                                "name": "CUSTOMERNAME",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBIDSO30",
-                                "dataView": "full",
-                                "source": {
-                                    "query": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIDSO30].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIDSO30]",
-                                    "dataSource": "CreditCollectionDataSource"
-                                },
-                                "annotations": [
-                                    {
-                                        "name": "QueryEditorSerialization",
-                                        "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIDSO30].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIDSO30]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                    }
-                                ]
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIDSO30].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIDSO30]"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBIDSO30"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            },
-                            {
-                                "name": "QueryEditorSerialization",
-                                "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIDSO30].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIDSO30]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Expected payments",
-                        "columns": [
-                            {
-                                "name": "Expected payment amount",
-                                "dataType": "double",
-                                "sourceColumn": "EXPECTEDPAYMENT",
-                                "sourceProviderType": "Numeric"
-                            },
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "isHidden": true,
-                                "sourceColumn": "COMPANY",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Expected payment date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "EXPECTEDPAYDATE",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "SALESID"
                             },
                             {
                                 "name": "DATAAREAID",
                                 "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Invoice",
-                                "dataType": "string",
-                                "sourceColumn": "INVOICE",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment",
-                                "dataView": "full",
-                                "source": {
-                                    "query": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment]",
-                                    "dataSource": "CreditCollectionDataSource"
-                                },
-                                "annotations": [
-                                    {
-                                        "name": "QueryEditorSerialization",
-                                        "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                    }
-                                ]
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment]"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            },
-                            {
-                                "name": "QueryEditorSerialization",
-                                "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Open interest notes",
-                        "columns": [
-                            {
-                                "name": "Interest note",
-                                "dataType": "string",
-                                "sourceColumn": "INTERESTNOTE",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "From date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "FROMDATE",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "To date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "TODATE",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBIInterestNotes",
-                                "dataView": "full",
-                                "source": {
-                                    "query": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIInterestNotes].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIInterestNotes] ",
-                                    "dataSource": "CreditCollectionDataSource"
-                                }
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIInterestNotes].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIInterestNotes] "
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBIInterestNotes"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Write-off",
-                        "columns": [
-                            {
-                                "name": "Write off amount",
-                                "dataType": "double",
-                                "sourceColumn": "WRITEOFFAMOUNT",
-                                "sourceProviderType": "Numeric"
-                            },
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Transaction date",
-                                "dataType": "dateTime",
-                                "sourceColumn": "TRANSDATE",
-                                "formatString": "General Date",
-                                "sourceProviderType": "DBTimeStamp"
-                            },
-                            {
-                                "name": "Reason code",
-                                "dataType": "string",
-                                "sourceColumn": "REASON",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Reason comment",
-                                "dataType": "string",
-                                "sourceColumn": "REASONCOMMENT",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Main account",
-                                "dataType": "string",
-                                "sourceColumn": "WRITEOFFDIMENSION",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
+                                "sourceColumn": "DATAAREAID"
                             },
                             {
                                 "name": "PARTITION",
-                                "dataType": "int64",
-                                "isHidden": true,
+                                "dataType": "double",
                                 "sourceColumn": "PARTITION"
                             },
                             {
-                                "name": "WRITEOFFREASON",
+                                "name": "CUSTACCOUNT",
                                 "dataType": "string",
-                                "sourceColumn": "WRITEOFFREASON"
+                                "sourceColumn": "CUSTACCOUNT"
+                            },
+                            {
+                                "name": "SALESNAME",
+                                "dataType": "string",
+                                "sourceColumn": "SALESNAME"
+                            },
+                            {
+                                "name": "MCRREASONCODE",
+                                "dataType": "string",
+                                "sourceColumn": "MCRREASONCODE"
+                            },
+                            {
+                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
+                                "dataType": "int64",
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
                             }
                         ],
                         "partitions": [
                             {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBIWriteOff",
+                                "name": "Partition",
                                 "dataView": "full",
                                 "source": {
-                                    "query": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIWriteOff].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIWriteOff]",
-                                    "dataSource": "CreditCollectionDataSource"
-                                },
-                                "annotations": [
-                                    {
-                                        "name": "QueryEditorSerialization",
-                                        "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIWriteOff].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIWriteOff]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                    }
-                                ]
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIWriteOff].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIWriteOff]"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBIWriteOff"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
-                            },
-                            {
-                                "name": "QueryEditorSerialization",
-                                "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIWriteOff].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBIWriteOff]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Customer dimension",
-                        "columns": [
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Company",
-                                "dataType": "string",
-                                "sourceColumn": "COMPANY",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer group",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTGROUP",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Credit rating",
-                                "dataType": "string",
-                                "sourceColumn": "CREDITRATING",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "BLOCKED_VALUE",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "BLOCKED_VALUE",
-                                "sourceProviderType": "Integer"
-                            },
-                            {
-                                "name": "Country/Region",
-                                "dataType": "string",
-                                "sourceColumn": "GEOGRAPHICLOCATION",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "County",
-                                "dataType": "string",
-                                "sourceColumn": "COUNTY",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "State",
-                                "dataType": "string",
-                                "sourceColumn": "STATE",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "City",
-                                "dataType": "string",
-                                "sourceColumn": "CITY",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "District",
-                                "dataType": "string",
-                                "sourceColumn": "DISTRICTNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Zip/Postal code",
-                                "dataType": "string",
-                                "sourceColumn": "ZIPCODE",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Company1",
-                                "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "PARTITION",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "PARTITION",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "ROW_UNIQUEKEY",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "ROW_UNIQUEKEY",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "Blocked",
-                                "dataType": "string",
-                                "sourceColumn": "BLOCKED",
-                                "sourceProviderType": "WChar"
-                            }
-                        ],
-                        "partitions": [
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable",
-                                "dataView": "full",
-                                "source": {
-                                    "query": " SELECT [dbo].[CustCollectionsBIMeasurements_CustTable].* FROM [dbo].[CustCollectionsBIMeasurements_CustTable] ",
-                                    "dataSource": "CreditCollectionDataSource"
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold1 = CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold1,[Delimiter=\",\", Columns=9, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"SALESID\", Int64.Type}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"CUSTACCOUNT\", type text}, {\"SALESNAME\", type text}, {\"MCRREASONCODE\", type text}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}})",
+                                        "in",
+                                        "    #\"Changed Type\""
+                                    ]
                                 }
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": " SELECT [dbo].[CustCollectionsBIMeasurements_CustTable].* FROM [dbo].[CustCollectionsBIMeasurements_CustTable] "
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustTable"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
                             }
                         ]
                     },
@@ -1367,186 +293,791 @@
                         "name": "Sales on hold",
                         "columns": [
                             {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "PARTITION",
+                                "dataType": "string",
+                                "sourceColumn": "PARTITION"
+                            },
+                            {
+                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
+                                "dataType": "string",
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
+                            },
+                            {
                                 "name": "Sales ID",
                                 "dataType": "string",
-                                "sourceColumn": "SALESID",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "Sales ID"
                             },
                             {
                                 "name": "Company",
                                 "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "Company"
                             },
                             {
                                 "name": "Customer account",
                                 "dataType": "string",
-                                "sourceColumn": "CUSTACCOUNT",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "Customer account"
                             },
                             {
                                 "name": "Customer name",
                                 "dataType": "string",
-                                "sourceColumn": "SALESNAME",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "Customer name"
                             },
                             {
                                 "name": "Reason code",
                                 "dataType": "string",
-                                "sourceColumn": "MCRREASONCODE",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
+                                "sourceColumn": "Reason code"
                             }
                         ],
                         "partitions": [
                             {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold 1",
+                                "name": "Partition",
                                 "dataView": "full",
                                 "source": {
-                                    "query": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold] ",
-                                    "dataSource": "CreditCollectionDataSource"
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold1 = CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold1,[Delimiter=\",\", Columns=9, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns(#\"Promoted Headers\",{{\"CUSTACCOUNT\", \"Customer account\"}, {\"DATAAREAID\", \"Company\"}, {\"SALESID\", \"Sales ID\"}, {\"MCRREASONCODE\", \"Reason code\"}, {\"SALESNAME\", \"Customer name\"}})",
+                                        "in",
+                                        "    #\"Renamed Columns\""
+                                    ]
                                 }
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": " SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold] "
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBISalesOnHold"
-                            },
-                            {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
                             }
                         ]
                     },
                     {
-                        "name": "Customers on credit",
+                        "name": "Collection status",
                         "columns": [
                             {
-                                "name": "Balance",
-                                "dataType": "double",
-                                "sourceColumn": "CREDITEXPOSED",
-                                "sourceProviderType": "Numeric"
-                            },
-                            {
-                                "name": "Amount over credit limit",
-                                "dataType": "double",
-                                "sourceColumn": "AMOUNTOVERCREDITLIMIT",
-                                "sourceProviderType": "Numeric"
-                            },
-                            {
-                                "name": "Company",
+                                "name": "@odata.etag",
                                 "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "COLLECTIONSTATUSAMOUNTS",
+                                "dataType": "double",
+                                "sourceColumn": "COLLECTIONSTATUSAMOUNTS"
                             },
                             {
                                 "name": "PARTITION",
-                                "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "PARTITION",
-                                "sourceProviderType": "BigInt"
-                            },
-                            {
-                                "name": "Customer account",
-                                "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Customer name",
-                                "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
-                            },
-                            {
-                                "name": "Credit remaining",
                                 "dataType": "double",
-                                "sourceColumn": "CREDITREMAINING",
-                                "sourceProviderType": "Numeric"
+                                "sourceColumn": "PARTITION"
                             },
                             {
-                                "name": "Credit limit",
-                                "dataType": "double",
-                                "sourceColumn": "SYSTEMCURRENCYCREDITMAX",
-                                "sourceProviderType": "Numeric"
-                            },
-                            {
-                                "name": "Credit rating",
+                                "name": "DISPUTESTATUSTRANSLATED",
                                 "dataType": "string",
-                                "sourceColumn": "CREDITRATING",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "DISPUTESTATUSTRANSLATED"
+                            },
+                            {
+                                "name": "DUEDATE",
+                                "dataType": "dateTime",
+                                "sourceColumn": "DUEDATE"
                             },
                             {
                                 "name": "CustCollectionsBIMeasurements_CustTable_FK",
                                 "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
                             },
                             {
-                                "type": "calculated",
-                                "name": "Percentage of credit remaining",
-                                "dataType": "double",
-                                "isDataTypeInferred": true,
-                                "expression": " [Credit remaining]/[Credit limit]",
-                                "formatString": "0.0 %;-0.0 %;0.0 %"
+                                "name": "Company",
+                                "dataType": "string",
+                                "sourceColumn": "Company"
+                            },
+                            {
+                                "name": "Customer account",
+                                "dataType": "string",
+                                "sourceColumn": "Customer account"
+                            },
+                            {
+                                "name": "Customer name",
+                                "dataType": "string",
+                                "sourceColumn": "Customer name"
+                            },
+                            {
+                                "name": "Transaction date",
+                                "dataType": "dateTime",
+                                "sourceColumn": "Transaction date"
                             }
                         ],
                         "partitions": [
                             {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBICredit",
+                                "name": "Partition",
                                 "dataView": "full",
                                 "source": {
-                                    "query": [
-                                        "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit]",
-                                        "WHERE SYSTEMCURRENCYCREDITMAX>0"
-                                    ],
-                                    "dataSource": "CreditCollectionDataSource"
-                                },
-                                "annotations": [
-                                    {
-                                        "name": "QueryEditorSerialization",
-                                        "value": [
-                                            "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit]",
-                                            "WHERE SYSTEMCURRENCYCREDITMAX>0</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                        ]
-                                    }
-                                ]
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus1 = CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBICollectionStatus1,[Delimiter=\",\", Columns=11, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"COLLECTIONSTATUSAMOUNTS\", type number}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"ACCOUNTNUM\", type text}, {\"CUSTOMERNAME\", type text}, {\"DISPUTESTATUSTRANSLATED\", type text}, {\"DUEDATE\", type datetime}, {\"TRANSDATE\", type datetime}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}}),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns( #\"Changed Type\",{{\"ACCOUNTNUM\", \"Customer account\"}, {\"DATAAREAID\", \"Company\"}, {\"TRANSDATE\", \"Transaction date\"}, {\"CUSTOMERNAME\", \"Customer name\"}})",
+                                        "in",
+                                        "     #\"Renamed Columns\""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Write-off",
+                        "columns": [
+                            {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "WRITEOFFAMOUNT",
+                                "dataType": "double",
+                                "sourceColumn": "WRITEOFFAMOUNT"
+                            },
+                            {
+                                "name": "DATAAREAID",
+                                "dataType": "string",
+                                "sourceColumn": "DATAAREAID"
+                            },
+                            {
+                                "name": "PARTITION",
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
+                            },
+                            {
+                                "name": "ACCOUNTNUM",
+                                "dataType": "string",
+                                "sourceColumn": "ACCOUNTNUM"
+                            },
+                            {
+                                "name": "TRANSDATE",
+                                "dataType": "dateTime",
+                                "sourceColumn": "TRANSDATE"
+                            },
+                            {
+                                "name": "REASON",
+                                "dataType": "string",
+                                "sourceColumn": "REASON"
+                            },
+                            {
+                                "name": "CUSTOMERNAME",
+                                "dataType": "string",
+                                "sourceColumn": "CUSTOMERNAME"
+                            },
+                            {
+                                "name": "WRITEOFFREASON",
+                                "dataType": "string",
+                                "sourceColumn": "WRITEOFFREASON"
+                            },
+                            {
+                                "name": "REASONCOMMENT",
+                                "dataType": "string",
+                                "sourceColumn": "REASONCOMMENT"
+                            },
+                            {
+                                "name": "WRITEOFFDIMENSION",
+                                "dataType": "int64",
+                                "sourceColumn": "WRITEOFFDIMENSION"
+                            },
+                            {
+                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
+                                "dataType": "int64",
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
                             }
                         ],
-                        "annotations": [
+                        "partitions": [
                             {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": [
-                                    "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit]",
-                                    "WHERE SYSTEMCURRENCYCREDITMAX>0"
-                                ]
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIWriteOff = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIWriteOff\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIWriteOff1 = CustCollectionsBIMeasurements_CustCollectionsBIWriteOff{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIWriteOff\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBIWriteOff1,[Delimiter=\",\", Columns=13, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"WRITEOFFAMOUNT\", type number}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"ACCOUNTNUM\", type text}, {\"TRANSDATE\", type datetime}, {\"REASON\", type text}, {\"CUSTOMERNAME\", type text}, {\"WRITEOFFREASON\", type text}, {\"REASONCOMMENT\", type text}, {\"WRITEOFFDIMENSION\", Int64.Type}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}})",
+                                        "in",
+                                        "    #\"Changed Type\""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Open interest notes",
+                        "partitions": [
+                            {
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIInterestNotes = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIInterestNotes\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIInterestNotes1 = CustCollectionsBIMeasurements_CustCollectionsBIInterestNotes{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIInterestNotes\"]}[Content]",
+                                        "in",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIInterestNotes1"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Open cases",
+                        "columns": [
+                            {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
                             },
                             {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBICredit"
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
                             },
                             {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
+                                "name": "PARTITION",
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
                             },
                             {
-                                "name": "QueryEditorSerialization",
-                                "value": [
-                                    "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit]",
-                                    "WHERE SYSTEMCURRENCYCREDITMAX>0</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                ]
+                                "name": "DESCRIPTION",
+                                "dataType": "string",
+                                "sourceColumn": "DESCRIPTION"
+                            },
+                            {
+                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
+                                "dataType": "int64",
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
+                            },
+                            {
+                                "name": "Case ID",
+                                "dataType": "int64",
+                                "sourceColumn": "Case ID"
+                            },
+                            {
+                                "name": "Company",
+                                "dataType": "string",
+                                "sourceColumn": "Company"
+                            },
+                            {
+                                "name": "Account number",
+                                "dataType": "string",
+                                "sourceColumn": "Account number"
+                            },
+                            {
+                                "name": "Customer name",
+                                "dataType": "string",
+                                "sourceColumn": "Customer name"
+                            }
+                        ],
+                        "partitions": [
+                            {
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICasesOpen = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICasesOpen\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICasesOpen1 = CustCollectionsBIMeasurements_CustCollectionsBICasesOpen{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICasesOpen\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBICasesOpen1,[Delimiter=\",\", Columns=9, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"CASEID\", Int64.Type}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"ACCOUNTNUM\", type text}, {\"CUSTOMERNAME\", type text}, {\"DESCRIPTION\", type text}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}}),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"ACCOUNTNUM\", \"Account number\"}, {\"CASEID\", \"Case ID\"}, {\"CUSTOMERNAME\", \"Customer name\"}, {\"DATAAREAID\", \"Company\"}, {\"DESCRIPTION\", \"Description\"}})",
+                                        "in",
+                                        "    #\"Renamed Columns\""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Aging",
+                        "columns": [
+                            {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "PARTITION",
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
+                            },
+                            {
+                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
+                                "dataType": "int64",
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
+                            },
+                            {
+                                "name": "Aged balances",
+                                "dataType": "double",
+                                "sourceColumn": "Aged balances"
+                            },
+                            {
+                                "name": "Company",
+                                "dataType": "string",
+                                "sourceColumn": "Company"
+                            },
+                            {
+                                "name": "Customer account",
+                                "dataType": "string",
+                                "sourceColumn": "Customer account"
+                            },
+                            {
+                                "name": "Aging periods",
+                                "dataType": "string",
+                                "sourceColumn": "Aging periods"
+                            },
+                            {
+                                "name": "Customer name",
+                                "dataType": "string",
+                                "sourceColumn": "Customer name"
+                            },
+                            {
+                                "name": "Aging period definitions",
+                                "dataType": "string",
+                                "sourceColumn": "Aging period definitions"
+                            }
+                        ],
+                        "partitions": [
+                            {
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances1 = CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBIAgedBalances1,[Delimiter=\",\", Columns=10, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"AGEDBALANCES\", type number}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"ACCOUNTNUM\", type text}, {\"HEADING\", type text}, {\"CUSTOMERNAME\", type text}, {\"AGINGNAME\", type text}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}}),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"ACCOUNTNUM\", \"Customer account\"}, {\"AGEDBALANCES\", \"Aged balances\"}, {\"AGINGNAME\", \"Aging period definitions\"}, {\"CUSTOMERNAME\", \"Customer name\"}, {\"DATAAREAID\", \"Company\"}, {\"HEADING\", \"Aging periods\"}})",
+                                        "in",
+                                        "    #\"Renamed Columns\""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Collection letter amounts",
+                        "columns": [
+                            {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "PARTITION",
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
+                            },
+                            {
+                                "name": "COLLECTIONLETTERCODE_VALUE",
+                                "dataType": "int64",
+                                "sourceColumn": "COLLECTIONLETTERCODE_VALUE"
+                            },
+                            {
+                                "name": "Collection letter amount",
+                                "dataType": "double",
+                                "sourceColumn": "Collection letter amount"
+                            },
+                            {
+                                "name": "Company",
+                                "dataType": "string",
+                                "sourceColumn": "Company"
+                            },
+                            {
+                                "name": "Transaction date",
+                                "dataType": "dateTime",
+                                "sourceColumn": "Transaction date"
+                            },
+                            {
+                                "name": "Customer account",
+                                "dataType": "string",
+                                "sourceColumn": "Customer account"
+                            },
+                            {
+                                "name": "Customer name",
+                                "dataType": "string",
+                                "sourceColumn": "Customer name"
+                            },
+                            {
+                                "name": "Due date",
+                                "dataType": "dateTime",
+                                "sourceColumn": "Due date"
+                            },
+                            {
+                                "name": "Transactions with collection letter code",
+                                "dataType": "int64",
+                                "sourceColumn": "Transactions with collection letter code"
+                            },
+                            {
+                                "name": "Collection letter code",
+                                "dataType": "string",
+                                "sourceColumn": "Collection letter code"
+                            }
+                        ],
+                        "partitions": [
+                            {
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts1 = CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBICollectionLetterAmounts1,[Delimiter=\",\", Columns=12, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"COLLECTIONLETTERAMOUNTS\", type number}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"TRANSDATE\", type datetime}, {\"ACCOUNTNUM\", type text}, {\"COLLECTIONLETTERCODE_VALUE\", Int64.Type}, {\"CUSTOMERNAME\", type text}, {\"DUEDATE\", type datetime}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}, {\"COLLECTIONLETTERCODE\", type text}}),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns( #\"Changed Type\",{{\"ACCOUNTNUM\", \"Customer account\"}, {\"COLLECTIONLETTERAMOUNTS\", \"Collection letter amount\"}, {\"COLLECTIONLETTERCODE\", \"Collection letter code\"}, {\"CustCollectionsBIMeasurements_CustTable_FK\", \"Transactions with collection letter code\"}, {\"CUSTOMERNAME\", \"Customer name\"}, {\"DATAAREAID\", \"Company\"}, {\"DUEDATE\", \"Due date\"}, {\"TRANSDATE\", \"Transaction date\"}})",
+                                        "in",
+                                        "    #\"Renamed Columns\""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Expected payments",
+                        "columns": [
+                            {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "COMPANY",
+                                "dataType": "string",
+                                "sourceColumn": "COMPANY"
+                            },
+                            {
+                                "name": "DATAAREAID",
+                                "dataType": "string",
+                                "sourceColumn": "DATAAREAID"
+                            },
+                            {
+                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
+                                "dataType": "int64",
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
+                            },
+                            {
+                                "name": "Expected payment amount",
+                                "dataType": "double",
+                                "sourceColumn": "Expected payment amount"
+                            },
+                            {
+                                "name": "Expected payment date",
+                                "dataType": "dateTime",
+                                "sourceColumn": "Expected payment date"
+                            },
+                            {
+                                "name": "Customer account",
+                                "dataType": "string",
+                                "sourceColumn": "Customer account"
+                            },
+                            {
+                                "name": "Customer name",
+                                "dataType": "string",
+                                "sourceColumn": "Customer name"
+                            },
+                            {
+                                "name": "Invoice number",
+                                "dataType": "string",
+                                "sourceColumn": "Invoice number"
+                            }
+                        ],
+                        "partitions": [
+                            {
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment1 = CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBIExpectedPayment1,[Delimiter=\",\", Columns=10, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"EXPECTEDPAYMENT\", type number}, {\"COMPANY\", type text}, {\"EXPECTEDPAYDATE\", type datetime}, {\"ACCOUNTNUM\", type text}, {\"DATAAREAID\", type text}, {\"CUSTOMERNAME\", type text}, {\"INVOICE\", type text}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}}),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"ACCOUNTNUM\", \"Customer account\"}, {\"COMPANY\", \"Company\"}, {\"CUSTOMERNAME\", \"Customer name\"}, {\"EXPECTEDPAYDATE\", \"Expected payment date\"}, {\"EXPECTEDPAYMENT\", \"Expected payment amount\"}, {\"INVOICE\", \"Invoice number\"}})",
+                                        "in",
+                                        "    #\"Renamed Columns\""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Open collection letters",
+                        "columns": [
+                            {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "PARTITION",
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
+                            },
+                            {
+                                "name": "COLLECTIONLETTERCODE_VALUE",
+                                "dataType": "int64",
+                                "sourceColumn": "COLLECTIONLETTERCODE_VALUE"
+                            },
+                            {
+                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
+                                "dataType": "int64",
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
+                            },
+                            {
+                                "name": "Collection letters",
+                                "dataType": "int64",
+                                "sourceColumn": "Collection letters"
+                            },
+                            {
+                                "name": "Company",
+                                "dataType": "string",
+                                "sourceColumn": "Company"
+                            },
+                            {
+                                "name": "Customer account",
+                                "dataType": "string",
+                                "sourceColumn": "Customer account"
+                            },
+                            {
+                                "name": "Customer name",
+                                "dataType": "string",
+                                "sourceColumn": "Customer name"
+                            },
+                            {
+                                "name": "Print date",
+                                "dataType": "dateTime",
+                                "sourceColumn": "Print date"
+                            },
+                            {
+                                "name": "Collection letter date",
+                                "dataType": "dateTime",
+                                "sourceColumn": "Collection letter date"
+                            },
+                            {
+                                "name": "Collection letter code",
+                                "dataType": "string",
+                                "sourceColumn": "Collection letter code"
+                            }
+                        ],
+                        "partitions": [
+                            {
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICollectionLetter = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICollectionLetter\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICollectionLetter1 = CustCollectionsBIMeasurements_CustCollectionsBICollectionLetter{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICollectionLetter\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBICollectionLetter1,[Delimiter=\",\", Columns=12, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"COLLECTIONLETTERNUM\", Int64.Type}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"ACCOUNTNUM\", type text}, {\"CUSTOMERNAME\", type text}, {\"PRINTDATE\", type datetime}, {\"COLLECTIONLETTERDATE\", type datetime}, {\"COLLECTIONLETTERCODE_VALUE\", Int64.Type}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}, {\"COLLECTIONLETTERCODE\", type text}}),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"ACCOUNTNUM\", \"Customer account\"}, {\"COLLECTIONLETTERNUM\", \"Collection letters\"}, {\"COLLECTIONLETTERCODE\", \"Collection letter code\"}, {\"COLLECTIONLETTERDATE\", \"Collection letter date\"}, {\"CUSTOMERNAME\", \"Customer name\"}, {\"PRINTDATE\", \"Print date\"}, {\"DATAAREAID\", \"Company\"}})",
+                                        "in",
+                                        "    #\"Renamed Columns\""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Balance due",
+                        "columns": [
+                            {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "PARTITION",
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
+                            },
+                            {
+                                "name": "Balance due",
+                                "dataType": "double",
+                                "sourceColumn": "Balance due"
+                            },
+                            {
+                                "name": "Company",
+                                "dataType": "string",
+                                "sourceColumn": "Company"
+                            },
+                            {
+                                "name": "Due date",
+                                "dataType": "dateTime",
+                                "sourceColumn": "Due date"
+                            },
+                            {
+                                "name": "Customer account",
+                                "dataType": "string",
+                                "sourceColumn": "Customer account"
+                            },
+                            {
+                                "name": "Customer name",
+                                "dataType": "string",
+                                "sourceColumn": "Customer name"
+                            },
+                            {
+                                "name": "Key",
+                                "dataType": "int64",
+                                "sourceColumn": "Key"
+                            }
+                        ],
+                        "partitions": [
+                            {
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue1 = CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBIBalancesDue1,[Delimiter=\",\", Columns=9, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"SYSTEMCURRENCYAMOUNT\", type number}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"DUEDATE\", type datetime}, {\"ACCOUNTNUM\", type text}, {\"CUSTOMERNAME\", type text}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}}),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"ACCOUNTNUM\", \"Customer account\"}, {\"CUSTOMERNAME\", \"Customer name\"}, {\"DATAAREAID\", \"Company\"}, {\"DUEDATE\", \"Due date\"}, {\"SYSTEMCURRENCYAMOUNT\", \"Balance due\"}, {\"CustCollectionsBIMeasurements_CustTable_FK\", \"Key\"}})",
+                                        "in",
+                                        "    #\"Renamed Columns\""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "30 days sales outstanding",
+                        "columns": [
+                            {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "DSO30",
+                                "dataType": "int64",
+                                "sourceColumn": "DSO30"
+                            },
+                            {
+                                "name": "DATAAREAID",
+                                "dataType": "string",
+                                "sourceColumn": "DATAAREAID"
+                            },
+                            {
+                                "name": "PARTITION",
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
+                            },
+                            {
+                                "name": "ACCOUNTNUM",
+                                "dataType": "string",
+                                "sourceColumn": "ACCOUNTNUM"
+                            },
+                            {
+                                "name": "CUSTOMERNAME",
+                                "dataType": "string",
+                                "sourceColumn": "CUSTOMERNAME"
+                            },
+                            {
+                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
+                                "dataType": "int64",
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
+                            }
+                        ],
+                        "partitions": [
+                            {
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "CustCollectionsBIMeasurements_CustCollectionsBIDSO30 = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIDSO30\"]}[Content],",
+                                        "CustCollectionsBIMeasurements_CustCollectionsBIDSO1 = CustCollectionsBIMeasurements_CustCollectionsBIDSO30{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIDSO30\"]}[Content],",
+                                        "#\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBIDSO1,[Delimiter=\",\", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "#\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "#\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"DSO30\", Int64.Type}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"ACCOUNTNUM\", type text}, {\"CUSTOMERNAME\", type text}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}})",
+                                        "in",
+                                        "#\"Changed Type\""
+                                    ]
+                                }
                             }
                         ]
                     },
@@ -1554,111 +1085,348 @@
                         "name": "Customers over credit limit",
                         "columns": [
                             {
-                                "name": "Balance",
-                                "dataType": "double",
-                                "sourceColumn": "CREDITEXPOSED",
-                                "sourceProviderType": "Numeric"
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
                             },
                             {
                                 "name": "Amount over credit limit",
                                 "dataType": "double",
-                                "sourceColumn": "AMOUNTOVERCREDITLIMIT",
-                                "sourceProviderType": "Numeric"
+                                "sourceColumn": "Amount over credit limit"
                             },
                             {
                                 "name": "Company",
                                 "dataType": "string",
-                                "sourceColumn": "DATAAREAID",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "Company"
                             },
                             {
                                 "name": "PARTITION",
-                                "dataType": "int64",
-                                "sourceColumn": "PARTITION",
-                                "sourceProviderType": "BigInt"
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
                             },
                             {
                                 "name": "Customer account",
                                 "dataType": "string",
-                                "sourceColumn": "ACCOUNTNUM",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "Customer account"
                             },
                             {
                                 "name": "Customer name",
                                 "dataType": "string",
-                                "sourceColumn": "CUSTOMERNAME",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "Customer name"
                             },
                             {
-                                "name": "Credit Remaining",
+                                "name": "Credit remaining",
                                 "dataType": "double",
-                                "sourceColumn": "CREDITREMAINING",
-                                "sourceProviderType": "Numeric"
+                                "sourceColumn": "Credit remaining"
                             },
                             {
                                 "name": "Credit limit",
                                 "dataType": "double",
-                                "sourceColumn": "SYSTEMCURRENCYCREDITMAX",
-                                "sourceProviderType": "Numeric"
+                                "sourceColumn": "Credit limit"
                             },
                             {
-                                "name": "Credit Rating",
+                                "name": "Credit rating",
                                 "dataType": "string",
-                                "sourceColumn": "CREDITRATING",
-                                "sourceProviderType": "WChar"
+                                "sourceColumn": "Credit rating"
                             },
                             {
                                 "name": "CustCollectionsBIMeasurements_CustTable_FK",
                                 "dataType": "int64",
-                                "isHidden": true,
-                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                                "sourceProviderType": "BigInt"
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
+                            },
+                            {
+                                "name": "Balance",
+                                "dataType": "double",
+                                "sourceColumn": "Balance"
                             }
                         ],
                         "partitions": [
                             {
-                                "name": "CustCollectionsBIMeasurements_CustCollectionsBICredit",
+                                "name": "Partition",
                                 "dataView": "full",
                                 "source": {
-                                    "query": [
-                                        "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit]",
-                                        "WHERE AMOUNTOVERCREDITLIMIT > 0 AND SYSTEMCURRENCYCREDITMAX > 0"
-                                    ],
-                                    "dataSource": "CreditCollectionDataSource"
-                                },
-                                "annotations": [
-                                    {
-                                        "name": "QueryEditorSerialization",
-                                        "value": [
-                                            "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit]",
-                                            "WHERE AMOUNTOVERCREDITLIMIT > 0 AND SYSTEMCURRENCYCREDITMAX > 0</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                        ]
-                                    }
-                                ]
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICredit = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICredit\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICredit1 = CustCollectionsBIMeasurements_CustCollectionsBICredit{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICredit\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBICredit1,[Delimiter=\",\", Columns=12, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"AMOUNTOVERCREDITLIMIT\", type number}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"ACCOUNTNUM\", type text}, {\"CUSTOMERNAME\", type text}, {\"CREDITREMAINING\", type number}, {\"SYSTEMCURRENCYCREDITMAX\", type number}, {\"CREDITRATING\", type text}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}, {\"CREDITEXPOSED\", type number}}),",
+                                        "    #\"Filtered Rows\" = Table.SelectRows(#\"Changed Type\", each [AMOUNTOVERCREDITLIMIT] > 0),",
+                                        "    #\"Filtered Rows1\" = Table.SelectRows(#\"Filtered Rows\", each [SYSTEMCURRENCYCREDITMAX] > 0),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns(#\"Filtered Rows1\",{{\"CREDITEXPOSED\", \"Balance\"}, {\"SYSTEMCURRENCYCREDITMAX\", \"Credit limit\"}, {\"AMOUNTOVERCREDITLIMIT\", \"Amount over credit limit\"}, {\"ACCOUNTNUM\", \"Customer account\"}, {\"CUSTOMERNAME\", \"Customer name\"}, {\"DATAAREAID\", \"Company\"}, {\"CREDITRATING\", \"Credit rating\"}, {\"CREDITREMAINING\", \"Credit remaining\"}})",
+                                        "in",
+                                        "     #\"Renamed Columns\""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Customers on credit",
+                        "columns": [
+                            {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "Amount over credit limit",
+                                "dataType": "double",
+                                "sourceColumn": "Amount over credit limit"
+                            },
+                            {
+                                "name": "Company",
+                                "dataType": "string",
+                                "sourceColumn": "Company"
+                            },
+                            {
+                                "name": "PARTITION",
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
+                            },
+                            {
+                                "name": "Customer account",
+                                "dataType": "string",
+                                "sourceColumn": "Customer account"
+                            },
+                            {
+                                "name": "Customer name",
+                                "dataType": "string",
+                                "sourceColumn": "Customer name"
+                            },
+                            {
+                                "name": "Credit remaining",
+                                "dataType": "double",
+                                "sourceColumn": "Credit remaining"
+                            },
+                            {
+                                "name": "Credit limit",
+                                "dataType": "double",
+                                "sourceColumn": "Credit limit"
+                            },
+                            {
+                                "name": "Credit rating",
+                                "dataType": "string",
+                                "sourceColumn": "Credit rating"
+                            },
+                            {
+                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
+                                "dataType": "int64",
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
+                            },
+                            {
+                                "name": "Balance",
+                                "dataType": "double",
+                                "sourceColumn": "Balance"
+                            },
+                            {
+                                "name": "Percentage of credit remaining",
+                                "dataType": "double",
+                                "sourceColumn": "Percentage of credit remaining"
                             }
                         ],
-                        "annotations": [
+                        "partitions": [
                             {
-                                "name": "_TM_ExtProp_QueryDefinition",
-                                "value": [
-                                    "SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit]",
-                                    "WHERE AMOUNTOVERCREDITLIMIT > 0 AND SYSTEMCURRENCYCREDITMAX > 0"
-                                ]
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICredit = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICredit\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICredit1 = CustCollectionsBIMeasurements_CustCollectionsBICredit{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICredit\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBICredit1,[Delimiter=\",\", Columns=12, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"AMOUNTOVERCREDITLIMIT\", type number}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"ACCOUNTNUM\", type text}, {\"CUSTOMERNAME\", type text}, {\"CREDITREMAINING\", type number}, {\"SYSTEMCURRENCYCREDITMAX\", type number}, {\"CREDITRATING\", type text}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}, {\"CREDITEXPOSED\", type number}}),",
+                                        "    #\"Filtered Rows\" = Table.SelectRows(#\"Changed Type\", each [SYSTEMCURRENCYCREDITMAX] > 0),",
+                                        "    #\"Added Custom\" = Table.AddColumn(#\"Filtered Rows\", \"Percentage of credit remaining\", each [CREDITREMAINING]/[SYSTEMCURRENCYCREDITMAX]*100),",
+                                        "    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Added Custom\",{{\"Percentage of credit remaining\", type number}}),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type1\",{{\"SYSTEMCURRENCYCREDITMAX\", \"Credit limit\"}, {\"AMOUNTOVERCREDITLIMIT\", \"Amount over credit limit\"}, {\"ACCOUNTNUM\", \"Customer account\"}, {\"CREDITEXPOSED\", \"Balance\"}, {\"CREDITRATING\", \"Credit rating\"}, {\"CREDITREMAINING\", \"Credit remaining\"}, {\"CUSTOMERNAME\", \"Customer name\"}, {\"DATAAREAID\", \"Company\"}})",
+                                        "in",
+                                        "    #\"Renamed Columns\""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Open activities",
+                        "columns": [
+                            {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
                             },
                             {
-                                "name": "_TM_ExtProp_DbTableName",
-                                "value": "CustCollectionsBIMeasurements_CustCollectionsBICredit"
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
                             },
                             {
-                                "name": "_TM_ExtProp_DbSchemaName",
-                                "value": "dbo"
+                                "name": "PARTITION",
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
                             },
                             {
-                                "name": "QueryEditorSerialization",
-                                "value": [
-                                    "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit].* FROM [dbo].[CustCollectionsBIMeasurements_CustCollectionsBICredit]",
-                                    "WHERE AMOUNTOVERCREDITLIMIT > 0 AND SYSTEMCURRENCYCREDITMAX > 0</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
-                                ]
+                                "name": "CATEGORY_VALUE",
+                                "dataType": "int64",
+                                "sourceColumn": "CATEGORY_VALUE"
+                            },
+                            {
+                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
+                                "dataType": "int64",
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
+                            },
+                            {
+                                "name": "Activity number",
+                                "dataType": "int64",
+                                "sourceColumn": "Activity number"
+                            },
+                            {
+                                "name": "Company",
+                                "dataType": "string",
+                                "sourceColumn": "Company"
+                            },
+                            {
+                                "name": "Customer account",
+                                "dataType": "string",
+                                "sourceColumn": "Customer account"
+                            },
+                            {
+                                "name": "Customer name",
+                                "dataType": "string",
+                                "sourceColumn": "Customer name"
+                            },
+                            {
+                                "name": "Purpose",
+                                "dataType": "string",
+                                "sourceColumn": "Purpose"
+                            },
+                            {
+                                "name": "Type",
+                                "dataType": "string",
+                                "sourceColumn": "Type"
+                            },
+                            {
+                                "name": "Start date",
+                                "dataType": "dateTime",
+                                "sourceColumn": "Start date"
+                            },
+                            {
+                                "name": "End date",
+                                "dataType": "dateTime",
+                                "sourceColumn": "End date"
+                            },
+                            {
+                                "name": "Category",
+                                "dataType": "string",
+                                "sourceColumn": "Category"
+                            }
+                        ],
+                        "partitions": [
+                            {
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIActivitiesOpen = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIActivitiesOpen\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBIActivitiesOpen1 = CustCollectionsBIMeasurements_CustCollectionsBIActivitiesOpen{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBIActivitiesOpen\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBIActivitiesOpen1,[Delimiter=\",\", Columns=14, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"ACTIVITYNUMBER\", Int64.Type}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"ACCOUNTNUM\", type text}, {\"CUSTOMERNAME\", type text}, {\"CATEGORY_VALUE\", Int64.Type}, {\"PURPOSE\", type text}, {\"TYPEID\", type text}, {\"STARTDATETIME\", type datetime}, {\"ENDDATETIME\", type datetime}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}, {\"CATEGORY\", type text}}),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"ACCOUNTNUM\", \"Customer account\"}, {\"ACTIVITYNUMBER\", \"Activity number\"}, {\"DATAAREAID\", \"Company\"}, {\"CATEGORY\", \"Category\"}, {\"CUSTOMERNAME\", \"Customer name\"}, {\"ENDDATETIME\", \"End date\"}, {\"PURPOSE\", \"Purpose\"}, {\"STARTDATETIME\", \"Start date\"}, {\"TYPEID\", \"Type\"}})",
+                                        "in",
+                                        "    #\"Renamed Columns\""
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Case average closed time",
+                        "columns": [
+                            {
+                                "name": "@odata.etag",
+                                "dataType": "string",
+                                "sourceColumn": "@odata.etag"
+                            },
+                            {
+                                "name": "ItemInternalId",
+                                "dataType": "string",
+                                "sourceColumn": "ItemInternalId"
+                            },
+                            {
+                                "name": "PARTITION",
+                                "dataType": "double",
+                                "sourceColumn": "PARTITION"
+                            },
+                            {
+                                "name": "CustCollectionsBIMeasurements_CustTable_FK",
+                                "dataType": "int64",
+                                "sourceColumn": "CustCollectionsBIMeasurements_CustTable_FK"
+                            },
+                            {
+                                "name": "Average days close",
+                                "dataType": "int64",
+                                "sourceColumn": "Average days close"
+                            },
+                            {
+                                "name": "Case ID",
+                                "dataType": "int64",
+                                "sourceColumn": "Case ID"
+                            },
+                            {
+                                "name": "Company",
+                                "dataType": "string",
+                                "sourceColumn": "Company"
+                            },
+                            {
+                                "name": "Customer account",
+                                "dataType": "string",
+                                "sourceColumn": "Customer account"
+                            },
+                            {
+                                "name": "Customer name",
+                                "dataType": "string",
+                                "sourceColumn": "Customer name"
+                            }
+                        ],
+                        "partitions": [
+                            {
+                                "name": "Partition",
+                                "dataView": "full",
+                                "source": {
+                                    "type": "m",
+                                    "expression": [
+                                        "let",
+                                        "    Source=#\"dataLakeStore\",",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICaseAverageCloseTime = Source{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICaseAverageCloseTime\"]}[Content],",
+                                        "    CustCollectionsBIMeasurements_CustCollectionsBICaseAverageCloseTime1 = CustCollectionsBIMeasurements_CustCollectionsBICaseAverageCloseTime{[Name=\"CustCollectionsBIMeasurements_CustCollectionsBICaseAverageCloseTime\"]}[Content],",
+                                        "    #\"Imported CSV\" = Csv.Document(CustCollectionsBIMeasurements_CustCollectionsBICaseAverageCloseTime1,[Delimiter=\",\", Columns=9, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                                        "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                                        "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"@odata.etag\", type text}, {\"ItemInternalId\", type text}, {\"CASEAVERAGECLOSEDTIME\", Int64.Type}, {\"NUMOFCASES\", Int64.Type}, {\"DATAAREAID\", type text}, {\"PARTITION\", type number}, {\"ACCOUNTNUM\", type text}, {\"CUSTOMERNAME\", type text}, {\"CustCollectionsBIMeasurements_CustTable_FK\", Int64.Type}}),",
+                                        "    #\"Renamed Columns\" = Table.RenameColumns( #\"Changed Type\",{{\"ACCOUNTNUM\", \"Customer account\"}, {\"CASEAVERAGECLOSEDTIME\", \"Average days close\"}, {\"DATAAREAID\", \"Company\"}, {\"CUSTOMERNAME\", \"Customer name\"}, {\"NUMOFCASES\", \"Case ID\"}})",
+                                        "in",
+                                        "    #\"Renamed Columns\""
+                                    ]
+                                }
                             }
                         ]
                     }
@@ -1696,7 +1464,7 @@
                     {
                         "name": "0a91e4e2-5a0f-4347-8920-3762c9b16bc6",
                         "fromTable": "Expected payments",
-                        "fromColumn": "Company",
+                        "fromColumn": "COMPANY",
                         "toTable": "Customer dimension",
                         "toColumn": "ROW_UNIQUEKEY",
                         "crossFilteringBehavior": "bothDirections"
@@ -1712,13 +1480,6 @@
                     {
                         "name": "a467eb32-fa79-4c04-9631-f4843595d030",
                         "fromTable": "Open cases",
-                        "fromColumn": "CustCollectionsBIMeasurements_CustTable_FK",
-                        "toTable": "Customer dimension",
-                        "toColumn": "ROW_UNIQUEKEY"
-                    },
-                    {
-                        "name": "d86f292c-3602-4a32-bd8b-aa5e3d1ddcb2",
-                        "fromTable": "Open interest notes",
                         "fromColumn": "CustCollectionsBIMeasurements_CustTable_FK",
                         "toTable": "Customer dimension",
                         "toColumn": "ROW_UNIQUEKEY"
@@ -1753,13 +1514,6 @@
                         "toColumn": "ROW_UNIQUEKEY"
                     },
                     {
-                        "name": "adb7e8c6-866e-4b01-8aa5-e3e2d1a93661",
-                        "fromTable": "Customer dimension",
-                        "fromColumn": "Customer account",
-                        "toTable": "Activities average days to close",
-                        "toColumn": "Activity number"
-                    },
-                    {
                         "name": "5df808e7-ac30-4976-a271-0a80207bc7a3",
                         "fromTable": "Customers over credit limit",
                         "fromColumn": "CustCollectionsBIMeasurements_CustTable_FK",
@@ -1774,24 +1528,16 @@
                         "toTable": "Customer dimension",
                         "toColumn": "ROW_UNIQUEKEY",
                         "crossFilteringBehavior": "bothDirections"
-                    },
-                    {
-                        "name": "dde64b23-c59d-4a08-be30-8912b4ff2793",
-                        "fromTable": "Activities average days to close",
-                        "fromColumn": "Customer account",
-                        "toTable": "Customers on credit",
-                        "toColumn": "Customer account",
-                        "isActive": false
                     }
                 ],
                 "annotations": [
                     {
                         "name": "ClientCompatibilityLevel",
-                        "value": "400"
+                        "value": "500"
                     }
                 ]
-            }
+            },
+            "id": "CreditCollections"
         }
     }
 }
-
