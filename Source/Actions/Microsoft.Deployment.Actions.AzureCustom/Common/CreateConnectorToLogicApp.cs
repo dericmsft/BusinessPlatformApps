@@ -31,6 +31,12 @@ namespace Microsoft.Deployment.Actions.AzureCustom.Common
                 location = "brazilsouth";
             }
 
+            //Needs to be changed once Logic Apps makes it available
+            //if (connectorName == "azuredatalake" || connectorName == "dynamicsax")
+            //{
+            //    location = "centralus";
+            //}
+
             SubscriptionCloudCredentials creds = new TokenCloudCredentials(subscription, azureToken);
             Microsoft.Azure.Management.Resources.ResourceManagementClient client = new ResourceManagementClient(creds);
             var registeration = await client.Providers.RegisterAsync("Microsoft.Web");

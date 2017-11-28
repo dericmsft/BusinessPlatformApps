@@ -24,7 +24,8 @@ namespace Microsoft.Deployment.Actions.AzureCustom
             var azureToken = request.DataStore.GetJson("AzureToken", "access_token");
             var subscription = request.DataStore.GetJson("SelectedSubscription", "SubscriptionId");
             var resourceGroup = request.DataStore.GetValue("SelectedResourceGroup");
-            var location = request.DataStore.GetJson("SelectedLocation", "Name");
+            var bespokeLocation = request.DataStore.GetValue("ConnectorLocation");
+            var location = string.IsNullOrEmpty(bespokeLocation) ? request.DataStore.GetJson("SelectedLocation", "Name") : bespokeLocation;
             var apiConnectionName = request.DataStore.GetValue("ApiConnectionName");
 
             var connectionName = apiConnectionName == null ? "sql" : apiConnectionName;

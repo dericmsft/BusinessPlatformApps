@@ -221,6 +221,7 @@
     <Compile Include="AzureAS\DeployAzureASModel.cs" />
     <Compile Include="AzureAS\CheckASServerNameAvailability.cs" />
     <Compile Include="AzureAS\ValidateConnectionToAS.cs" />
+    <Compile Include="AzureDataLake\DeployADLLogicApp.cs" />
     <Compile Include="AzureDataLake\GetDataLakeAccount.cs" />
     <Compile Include="AzureML\DeployAzureMLExperiment.cs" />
     <Compile Include="AzureML\DeployAzureMLWorkspace.cs" />

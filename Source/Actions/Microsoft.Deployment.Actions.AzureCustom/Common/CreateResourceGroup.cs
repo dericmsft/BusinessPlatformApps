@@ -9,6 +9,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Deployment.Common.Helpers;
 
 namespace Microsoft.Deployment.Actions.AzureCustom.Common
 {
@@ -21,6 +22,11 @@ namespace Microsoft.Deployment.Actions.AzureCustom.Common
             var subscription = request.DataStore.GetJson("SelectedSubscription", "SubscriptionId");
             var resourceGroup = request.DataStore.GetValue("SelectedResourceGroup");
             var location = request.DataStore.GetJson("SelectedLocation", "Name");
+
+            if (request.Info.AppName.Contains("CDSA"))
+            {
+                location = "centralus";
+            }
 
             SubscriptionCloudCredentials creds = new TokenCloudCredentials(subscription, azureToken);
             Microsoft.Azure.Management.Resources.ResourceManagementClient client = new ResourceManagementClient(creds);

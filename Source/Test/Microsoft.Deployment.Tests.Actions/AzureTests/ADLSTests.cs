@@ -12,9 +12,10 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
     public class ADLSTests
     {
         [TestMethod]
-        public async Task ADLAuth()
+        public async Task GetDataLakeAccount()
         {
-            var dataStore = await TestManager.GetDataStore();
+            var dataStore = await TestManager.GetDataStore(true);
+            dataStore.AddToDataStore("DataLakeName", "ccadlaccount");
             var response = TestManager.ExecuteAction("Microsoft-GetDataLakeAccount", dataStore);
             Assert.IsTrue(response.IsSuccess);
         }

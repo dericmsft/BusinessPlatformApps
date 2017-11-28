@@ -44,6 +44,9 @@ namespace Microsoft.Deployment.Site.Service
             Constants.InformaticaRegistrationCode = ConfigurationManager.ConnectionStrings["InformaticaRegistrationCode"].ToString();
             Constants.SocialGistProvisionKeyUserName = ConfigurationManager.ConnectionStrings["SocialGistRedditUserName"].ToString();
             Constants.SocialGistProvisionKeyPassphrase = ConfigurationManager.ConnectionStrings["SocialGistRedditPassphrase"].ToString();
+            Constants.MicrosoftADLClientId = ConfigurationManager.ConnectionStrings["MicrosoftADLClientId"].ToString();
+            Constants.MicrosoftADLClientSecret = ConfigurationManager.ConnectionStrings["MicrosoftADLClientSecret"].ToString();
+            Constants.MSFTTenant = ConfigurationManager.ConnectionStrings["MSFTTenant"].ToString();
 
             var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
             config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);

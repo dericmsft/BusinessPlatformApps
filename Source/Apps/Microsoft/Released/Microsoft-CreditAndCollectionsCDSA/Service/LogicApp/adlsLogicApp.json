@@ -1,0 +1,180 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourcegroup": {
+            "defaultValue": "stresourcegroup",
+            "type": "string"
+        },
+        "subscription": {
+            "defaultValue": "idrequired",
+            "type": "string"
+        },
+        "connectionNameSql": {
+            "defaultValue": "connection",
+            "type": "String"
+        },
+        "connectionNameDataLake": {
+            "defaultValue": "connection",
+            "type": "String"
+        },
+        "dataLakeName": {
+            "defaultValue": "connection",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "Generalized from resource: '/subscriptions/20ea4e8d-d3d9-4f1d-947c-441675acd4f7/resourceGroups/SolutionTemplate-CC/providers/Microsoft.Logic/workflows/cdsaetl'.",
+            "type": "Microsoft.Logic/workflows",
+            "name": "cdsaetl",
+            "apiVersion": "2016-06-01",
+            "location": "centralus",
+            "tags": {},
+            "scale": null,
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "Recurrence": {
+                            "recurrence": {
+                                "frequency": "Day",
+                                "interval": 3
+                            },
+                            "type": "Recurrence"
+                        }
+                    },
+                    "actions": {
+                        "Execute_a_SQL_query": {
+                            "runAfter": {},
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "query": "SELECT * FROM sys.views \nWHERE [name] LIKE 'CustCollectionsBI%'"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['sql']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/datasets/default/query/sql"
+                            }
+                        },
+                        "For_each": {
+                            "foreach": "@body('Execute_a_SQL_query')?['resultsets']?['Table1']",
+                            "actions": {
+                                "Append_File_(concurrent)": {
+                                    "runAfter": {
+                                        "Delete_File": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "ApiConnection",
+                                    "inputs": {
+                                        "body": "@body('Create_CSV_table')",
+                                        "host": {
+                                            "connection": {
+                                                "name": "@parameters('$connections')['azuredatalake']['connectionId']"
+                                            }
+                                        },
+                                        "method": "post",
+                                        "path": "/webhdfsext/@{encodeURIComponent(items('For_each')?['name'],'/',items('For_each')?['name'])}",
+                                        "queries": {
+                                            "account": "[parameters('dataLakeName')]",
+                                            "appendMode": "autocreate",
+                                            "op": "concurrentappend"
+                                        }
+                                    }
+                                },
+                                "Create_CSV_table": {
+                                    "runAfter": {
+                                        "Get_rows": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "Table",
+                                    "inputs": {
+                                        "format": "CSV",
+                                        "from": "@body('Get_rows')?['value']"
+                                    }
+                                },
+                                "Delete_File": {
+                                    "runAfter": {
+                                        "Create_CSV_table": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "ApiConnection",
+                                    "inputs": {
+                                        "host": {
+                                            "connection": {
+                                                "name": "@parameters('$connections')['azuredatalake']['connectionId']"
+                                            }
+                                        },
+                                        "method": "delete",
+                                        "path": "/webhdfs/v1/@{encodeURIComponent(items('For_each')?['name'],'/',items('For_each')?['name'])}",
+                                        "queries": {
+                                            "account": "[parameters('dataLakeName')]",
+                                            "op": "DELETE"
+                                        }
+                                    }
+                                },
+                                "Get_rows": {
+                                    "runAfter": {},
+                                    "type": "ApiConnection",
+                                    "inputs": {
+                                        "host": {
+                                            "connection": {
+                                                "name": "@parameters('$connections')['sql']['connectionId']"
+                                            }
+                                        },
+                                        "method": "get",
+                                        "path": "/datasets/default/tables/@{encodeURIComponent(encodeURIComponent(items('For_each')?['name']))}/items"
+                                    },
+                                    "runtimeConfiguration": {
+                                        "paginationPolicy": {
+                                            "minimumItemCount": 10000
+                                        }
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Execute_a_SQL_query": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Foreach"
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "azuredatalake": {
+                                "connectionId": "[concat('/subscriptions/', parameters('subscription'), '/resourceGroups/',parameters('resourcegroup'),'/providers/Microsoft.Web/connections/', parameters('connectionNameDataLake'))]",
+                                "connectionName": "[parameters('connectionNameDataLake')]",
+                                "id": "[concat('/subscriptions/', parameters('subscription'), '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/azuredatalake')]"
+                            },
+                            "sql": {
+                                "connectionId": "[concat('/subscriptions/', parameters('subscription'), '/resourceGroups/',parameters('resourcegroup'),'/providers/Microsoft.Web/connections/', parameters('connectionNameSql'))]",
+                                "connectionName": "[parameters('connectionNameSql')]",
+                                "id": "[concat('/subscriptions/', parameters('subscription'), '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/sql')]"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

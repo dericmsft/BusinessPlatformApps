@@ -24,7 +24,8 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureDataLake
             var resourceGroup = request.DataStore.GetValue("SelectedResourceGroup");
             string aadTenant = request.DataStore.GetValue("AADTenant");
             var deploymentName = request.DataStore.GetValue("DeploymentName") ?? "ADLSDeployment";
-            var dataLakeName = "adls42";
+            var dataLakeName = request.DataStore.GetValue("DataLakeName");
+
             DataLakeStoreAccount account = null;
 
             var creds = GetCreds(Constants.MSFTTenant, new Uri(Constants.AzureManagementCoreApi), Constants.MicrosoftADLClientId, Constants.MicrosoftADLClientSecret);
