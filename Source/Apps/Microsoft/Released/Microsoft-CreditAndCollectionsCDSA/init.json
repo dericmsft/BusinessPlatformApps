@@ -2,6 +2,10 @@
     "Install": {
         "Pages": [
             {
+                "displayname": "Invite Page",
+                "name": "$SiteCommon$/pages-gallery/invite.html"
+            },
+            {
                 "architectureDiagram": "dist/Apps/Microsoft/Released/Microsoft-CreditAndCollections/Web/Images/creditAndCollectionsArchDiagram.png",
                 "displayname": "Getting Started",
                 "list1": [

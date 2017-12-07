@@ -70,5 +70,11 @@
         public static string MicrosoftADLClientId = string.Empty;
         public static string MicrosoftADLClientSecret = string.Empty;
         public static string MSFTTenant = string.Empty;
+
+        // Tenant Invites
+        public static string InvitationClientId = string.Empty;
+        public static string InvitationClientSecret = string.Empty;
+        public static string InvitationResource = string.Empty;
+        public const string InvitationTenant = string.Empty;
     }
 }

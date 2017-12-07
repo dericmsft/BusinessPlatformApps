@@ -1,5 +1,8 @@
 {
-    "create": {
+    "createOrReplace": {
+        "object": {
+            "database": "CreditCollections"
+        },
         "database": {
             "name": "CreditCollections",
             "compatibilityLevel": 1400,
