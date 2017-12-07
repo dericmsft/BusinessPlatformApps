@@ -6,5 +6,9 @@
         <button class="primary" click.trigger="connect()" disabled.bind="MS.HttpService.isServiceBusy">${MS.Translate.AX_LOGIN_CONNECT}</button>
     </div>
 
+    <div class="st-float-clear">
+        <p class="st-text" title="${MS.Translate.CUSTOMIZE_BASE_URL_DESCRIPTION}">${MS.Translate.CUSTOMIZE_BASE_URL} ${MS.Translate.COMMON_OPTIONAL}</p>
+        <input class="st-input" type="text" value.bind="emailAddress">
+    </div>
 
 </template>

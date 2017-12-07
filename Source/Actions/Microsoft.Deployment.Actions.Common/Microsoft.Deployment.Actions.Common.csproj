@@ -115,6 +115,8 @@
       <Link>Properties\SharedVersion.cs</Link>
     </Compile>
     <Compile Include="CheckVersion.cs" />
+    <Compile Include="CrossTenant\TenantHelpers.cs" />
+    <Compile Include="CrossTenant\TenantUserCheck.cs" />
     <Compile Include="EmailSubscription.cs" />
     <Compile Include="ExistingSqlServer.cs" />
     <Compile Include="GetMsiDownloadLink.cs" />
@@ -126,7 +128,7 @@
     <Compile Include="PBI\WranglePBI.cs" />
     <Compile Include="PowerBiLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TenantInvitation.cs" />
+    <Compile Include="CrossTenant\TenantInvitation.cs" />
     <Compile Include="Test\Test.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -47,6 +47,10 @@ namespace Microsoft.Deployment.Site.Service
             Constants.MicrosoftADLClientId = ConfigurationManager.ConnectionStrings["MicrosoftADLClientId"].ToString();
             Constants.MicrosoftADLClientSecret = ConfigurationManager.ConnectionStrings["MicrosoftADLClientSecret"].ToString();
             Constants.MSFTTenant = ConfigurationManager.ConnectionStrings["MSFTTenant"].ToString();
+            Constants.InvitationClientId = ConfigurationManager.ConnectionStrings["InvitationClientId"].ToString();
+            Constants.InvitationClientSecret = ConfigurationManager.ConnectionStrings["InvitationClientSecret"].ToString();
+            Constants.InvitationResource = ConfigurationManager.ConnectionStrings["InvitationResource"].ToString();
+            Constants.InvitationTenant = ConfigurationManager.ConnectionStrings["InvitationTenant"].ToString();
 
             var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
             config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);

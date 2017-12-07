@@ -1,4 +1,5 @@
-﻿using Microsoft.Deployment.Common;
+﻿using Microsoft.Deployment.Actions.Common.CrossTenant;
+using Microsoft.Deployment.Common;
 using Microsoft.Deployment.Common.ActionModel;
 using Microsoft.Deployment.Common.Actions;
 using Microsoft.Deployment.Common.Helpers;
@@ -24,7 +25,7 @@ namespace Microsoft.Deployment.Actions.Common
                 result = new ActionResponse(ActionStatus.Failure, "Email address cannot be null.");
             }
 
-            var code = GetTokenApp();
+            var code = TenantHelpers.GetTenantToken();
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", code);
@@ -45,14 +46,5 @@ namespace Microsoft.Deployment.Actions.Common
 
             return result;
         }
-
-        private string GetTokenApp()
-        {
-            AuthenticationContext ctx = new AuthenticationContext("https://login.windows.net/" + Constants.InvitationTenant);
-            var result = ctx.AcquireTokenAsync(Constants.InvitationResource, new ClientCredential(Constants.InvitationClientId, Constants.InvitationClientSecret)).Result;
-            var code = result.AccessToken;
-            return code;
-        }
-
     }
 }

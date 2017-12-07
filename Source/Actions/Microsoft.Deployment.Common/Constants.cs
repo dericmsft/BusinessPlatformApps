@@ -75,6 +75,6 @@
         public static string InvitationClientId = string.Empty;
         public static string InvitationClientSecret = string.Empty;
         public static string InvitationResource = string.Empty;
-        public const string InvitationTenant = string.Empty;
+        public static string InvitationTenant = string.Empty;
     }
 }
