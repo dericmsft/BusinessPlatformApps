@@ -211,6 +211,7 @@
     <Compile Include="Arm\DeployAzureArmTemplate.cs" />
     <Compile Include="Arm\WaitForArmDeploymentStatus.cs" />
     <Compile Include="AzureAS\AssignPermissionsForUser.cs" />
+    <Compile Include="AzureAS\DeployAzureASModelBlobStorage.cs" />
     <Compile Include="AzureAS\DeployAzureASModel.cs" />
     <Compile Include="AzureAS\CheckASServerNameAvailability.cs" />
     <Compile Include="AzureAS\ValidateConnectionToAS.cs" />

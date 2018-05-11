@@ -1,34 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Deployment.Common.ActionModel;
-using Microsoft.Deployment.Tests.Actions.TestHelpers;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading.Tasks;
+using Microsoft.Deployment.Tests.Actions.TestHelpers;
+using Microsoft.Deployment.Common.ActionModel;
 
 namespace Microsoft.Deployment.Tests.Actions.AzureTests
 {
+    /// <summary>
+    /// Summary description for DeployAzureAnalysisServicesBlobStorageTestcs
+    /// </summary>
     [TestClass]
-    public class AzureAnalysisServicesTest
+    public class AzureAnalysisServicesBlobStorageTestcs
     {
-        [TestMethod]
-        public async Task ErrorMessageValidation()
-        {
-            // Deploy AS Model based of the following pramaters
-            var dataStore = await TestManager.GetDataStore();
-
-            dataStore.AddToDataStore("ASServerName", "Test123");
-            var response = await TestManager.ExecuteActionAsync("Microsoft-CheckASServerNameAvailability", dataStore, "Microsoft-TwitterTemplate");
-            Assert.IsFalse(response.IsSuccess);
-        }
 
 
         [TestMethod]
         public async Task CheckServerNameAvailability()
         {
             Dictionary<string, string> extraTokens = new Dictionary<string, string>();
-            extraTokens.Add("as", "AzureTokenAS"); // request PBI token 
+            extraTokens.Add("as", "AzureTokenAS"); // request AAS token 
             // Deploy AS Model based of the following pramaters
             var dataStore = await TestManager.GetDataStore(true, extraTokens);
 
@@ -40,32 +32,29 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
         [TestMethod]
         public async Task DeployASModelTest()
         {
+            Dictionary<string, string> extraTokens = new Dictionary<string, string>();
+            extraTokens.Add("as", "AzureTokenAS"); // request AAS token 
+
             // Deploy AS Model based of the following pramaters
-            var dataStore = await TestManager.GetDataStore();
+            var dataStore = await TestManager.GetDataStore(false, extraTokens);
 
-            // Deploy Twitter Database Scripts
-            dataStore.AddToDataStore("SqlConnectionString", SqlCreds.GetSqlPagePayload("modb1"));
-            dataStore.AddToDataStore("SqlServerIndex", "0");
-            dataStore.AddToDataStore("SqlScriptsFolder", "Database/");
+            dataStore.AddToDataStore("StorageAccountName", "wpaplatformsa");
+            dataStore.AddToDataStore("StorageAccountType", "Standard_LRS");
+            dataStore.AddToDataStore("StorageAccountEncryptionEnabled", "true");
 
-            var response = await TestManager.ExecuteActionAsync("Microsoft-DeploySQLScripts", dataStore, "Microsoft-CRMSalesManagement");
-            Assert.IsTrue(response.Status == ActionStatus.Success);
+            ActionResponse response = TestManager.ExecuteAction("Microsoft-GetStorageAccountKey", dataStore);
 
-            dataStore.AddToDataStore("ASServerName", "asservermo2345");
-            dataStore.AddToDataStore("ASLocation", "westcentralus");
-            dataStore.AddToDataStore("ASSku", "D1");
-
-            dataStore.AddToDataStore("xmlaFilePath", "Service/AzureAS/SalesManagement.xmla");
-            dataStore.AddToDataStore("ASDatabase", "testdb");
-
-            response = await TestManager.ExecuteActionAsync("Microsoft-DeployAzureAnalysisServices", dataStore, "Microsoft-CRMSalesManagement");
             Assert.IsTrue(response.IsSuccess);
 
-            response = await TestManager.ExecuteActionAsync("Microsoft-ValidateConnectionToAS", dataStore, "Microsoft-CRMSalesManagement");
-            Assert.IsTrue(response.IsSuccess);
+            dataStore.AddToDataStore("ASServerName", "wpads");
+            dataStore.AddToDataStore("ASServerUrl", "asazure://westus2.asazure.windows.net/wpads");
+            dataStore.AddToDataStore("ASLocation", "westus2");
+            dataStore.AddToDataStore("ASDatabase", "SemanticModelTest");
 
-            //response = await TestManager.ExecuteActionAsync("Microsoft-DeployAzureASModel", dataStore, "Microsoft-CRMSalesManagement");
-            //Assert.IsTrue(response.IsSuccess);
+            dataStore.AddToDataStore("modelFilePath", "Service/AzureAS/modelDefinition.json");
+
+            response = await TestManager.ExecuteActionAsync("Microsoft-DeployAzureASModelBlobStorage", dataStore, "Microsoft-WorkplaceAnalytics");
+            Assert.IsTrue(response.IsSuccess);
         }
 
         [TestMethod]
