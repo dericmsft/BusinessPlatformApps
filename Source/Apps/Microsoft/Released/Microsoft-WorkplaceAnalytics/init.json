@@ -123,9 +123,9 @@
         "ASDatabase": "SemanticModelTest",
         "displayname": "$translate(INIT_ACTION_DEPLOYING_AS_MODEL)",
         "name": "Microsoft-DeployAzureASModelBlobStorage",
-        //"skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )",
+        "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )",
         //"SqlConnectionString": "$dsall(SqlConnectionString)[0]",
-        "xmlaFilePath": "Service/AzureAS/modelDefinition.json"
+        "modelFilePath": "Service/AzureAS/modelDefinition.json"
       },
       {
         "DeploymentName": "ASFunction",
