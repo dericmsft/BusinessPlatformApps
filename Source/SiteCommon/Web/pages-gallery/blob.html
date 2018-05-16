@@ -1,0 +1,138 @@
+﻿<template>
+    <h1 class="st-title">${title}</h1>
+    <p class="st-subtitle">${subtitle}</p>
+
+    <div if.bind="showNewSqlOption">
+        <p class="st-question st-text">${MS.Translate.SQL_SERVER_PROVISION}</p>
+        <select class="btn btn-default dropdown-toggle st-input" disabled.bind="MS.HttpService.isServiceBusy" value.bind="sqlInstance">
+            <option value="ExistingSql">${MS.Translate.SQL_SERVER_EXISTING}</option>
+        </select>
+    </div>
+
+    <div if.bind="sqlInstance == 'ExistingSql'">
+        <!--Azure blob storage name-->
+        <div class="st-float">
+            <p class="st-text">${MS.Translate.SQL_SERVER_SERVER_NAME}</p>
+            <input class="st-input" type="text" change.delegate="onInvalidate()" disabled.bind="MS.HttpService.isServiceBusy" value.bind="sqlServer" />
+            <span if.bind="isAzureSql && !isGovAzureSql">${azureSqlSuffix}</span>
+            <span if.bind="isGovAzureSql && isAzureSql">${azureGovtSuffix}</span>
+        </div>
+        <!--   -->
+        <div class="st-label-wrapper" if.bind="showAzureSql">
+            <label class="st-label">
+                <input type="checkbox" tabindex="-1" checked.bind="isAzureSql" disabled.bind="MS.HttpService.isServiceBusy">
+                <span class="smallFontSize">${MS.Translate.SQL_SERVER_USING_AZURE}</span>
+            </label>
+        </div>
+
+        <div class="st-float" if.bind="!isAzureSql && !hideSqlAuth">
+            <p class="st-text">
+                <span>${MS.Translate.SQL_SERVER_AUTHENTICATION}</span>
+                <span class="glyphicon pbi-glyph-info glyph-mini st-tooltip" title="${MS.Translate.SQL_SERVER_IMPERSONATION}" if.bind="isWindowsAuth && MS.UtilityService.UseImpersonation()"></span>
+            </p>
+            <select class="btn btn-default dropdown-toggle st-input" change.delegate="onAuthChange()" disabled.bind="MS.HttpService.isServiceBusy" value.bind="isWindowsAuth">
+                <option model.bind="true">Windows</option>
+                <option model.bind="false">SQL Server</option>
+            </select>
+        </div>
+        <!--Username and password field-->
+        <div class="st-float" if.bind="!isWindowsAuth || showCredsWhenWindowsAuth || isAzureSql">
+            <p class="st-text" if.bind="!logInAsCurrentUser">
+                <span if.bind="showCredsWhenWindowsAuth">${MS.Translate.SQL_SERVER_WINDOWS}</span>
+                <span class="glyphicon pbi-glyph-info glyph-mini st-tooltip" title="${MS.Translate.SQL_SERVER_WINDOWS_DESCRIPTION}" if.bind="showCredsWhenWindowsAuth"></span>
+                <span if.bind="!showCredsWhenWindowsAuth">${MS.Translate.SQL_SERVER_USERNAME}</span>
+            </p>
+            <input class="st-input" type="text" change.delegate="onInvalidate()" disabled.bind="MS.HttpService.isServiceBusy" if.bind="!logInAsCurrentUser" value.bind="username" />
+            <p class="st-text">
+                <span>${MS.Translate.SQL_SERVER_PASSWORD}</span>
+                <span class="glyphicon pbi-glyph-info glyph-mini st-tooltip" title="${MS.Translate_SQL_SERVER_PASSWORD_DESCRIPTION}" if.bind="showCredsWhenWindowsAuth"></span>
+            </p>
+            <input class="st-input" type="password" change.delegate="onInvalidate()" disabled.bind="MS.HttpService.isServiceBusy" value.bind="password" />
+            <p>
+        </div>
+
+        <!--checking if valid loading circle-->
+        <p class="st-float st-text" click.trigger="viewmodel.showAdvanced = !viewmodel.showAdvanced" if.bind="!MS.HttpService.isServiceBusy && !showDatabases && showGovAzure">
+            <span class="glyphicon pbi-glyph-circlering glyph-small st-toggle" if.bind="viewmodel.showAdvanced"></span>
+            <span class="st-toggle-collapse" if.bind="viewmodel.showAdvanced">-</span>
+            <span class="glyphicon pbi-glyph-addcircle glyph-small st-toggle" if.bind="!viewmodel.showAdvanced"></span>
+            <span>${MS.Translate.COMMON_ADVANCED_OPTIONAL}</span>
+        </p>
+        <!--Using GOV Azure-->
+        <div class="st-float" if.bind="viewmodel.showAdvanced && !showDatabases && !MS.HttpService.isServiceBusy && showGovAzure">
+            <label class="st-label">
+                <input type="checkbox" tabindex="-1" checked.bind="isGovAzureSql" disabled.bind="MS.HttpService.isServiceBusy">
+                <span class="st-text">${MS.Translate.SQL_SERVER_USING_GOV_AZURE}</span>
+            </label>
+        </div>
+        <!--Validate button-->
+        <p class="st-float">
+            <button class="primary" click.trigger="onValidate()" if.bind="!MS.HttpService.isServiceBusy">${MS.Translate.COMMON_VALIDATE}</button>
+        </p>
+    </div>
+
+    <!--<div if.bind="sqlInstance == 'NewSql'">
+        <p class="st-question st-text">${MS.Translate.SQL_SERVER_STANDARD_AZURE}</p>
+
+        <div class="st-float">
+            <p class="st-text">${MS.Translate.SQL_SERVER_SERVER_NAME}</p>
+            <input class="st-input" type="text" change.delegate="onInvalidate()" disabled.bind="MS.HttpService.isServiceBusy" value.bind="sqlServer" />
+            <span>${azureSqlSuffix}</span>
+            <p class="st-text">${MS.Translate.SQL_SERVER_USERNAME}</p>
+            <input class="st-input" type="text" change.delegate="onInvalidate()" disabled.bind="MS.HttpService.isServiceBusy" value.bind="username" />
+            <p class="st-text">
+                <span>${MS.Translate.SQL_SERVER_PASSWORD}</span>
+                <span class="glyphicon pbi-glyph-info glyph-mini st-tooltip" title="${MS.Translate.SQL_SERVER_PASSWORD_NEW_DESCRIPTION}"></span>
+            </p>
+            <input class="st-input" type="password" change.delegate="onInvalidate()" disabled.bind="MS.HttpService.isServiceBusy" value.bind="password" />
+            <p class="st-text">${MS.Translate.SQL_SERVER_PASSWORD_CONFIRMATION}</p>
+            <input class="st-input" type="password" change.delegate="onInvalidate()" disabled.bind="MS.HttpService.isServiceBusy" value.bind="passwordConfirmation" />
+        </div>
+
+        <p class="st-float st-text" click.trigger="viewmodel.showAdvanced = !viewmodel.showAdvanced" if.bind="!MS.HttpService.isServiceBusy">
+            <span class="glyphicon pbi-glyph-circlering glyph-small st-toggle" if.bind="viewmodel.showAdvanced"></span>
+            <span class="st-toggle-collapse" if.bind="viewmodel.showAdvanced">-</span>
+            <span class="glyphicon pbi-glyph-addcircle glyph-small st-toggle" if.bind="!viewmodel.showAdvanced"></span>
+            <span>${MS.Translate.COMMON_ADVANCED_OPTIONAL}</span>
+        </p>
+
+        <div class="st-float" if.bind="viewmodel.showAdvanced">
+            <p class="st-text">${MS.Translate.SQL_SERVER_SKU}</p>
+            <select class="btn btn-default dropdown-toggle st-input" disabled.bind="MS.HttpService.isServiceBusy" value.bind="sqlSku">
+                <option value="P1">${MS.Translate.SQL_SERVER_SKU_P1}</option>
+                <option value="S1" if.bind="showSkuS1">${MS.Translate.SQL_SERVER_SKU_S1}</option>
+                <option value="S2">${MS.Translate.SQL_SERVER_SKU_S2}</option>
+                <option value="S3">${MS.Translate.SQL_SERVER_SKU_S3}</option>
+            </select>
+            <p class="st-text">
+                <bpst-link a-description="${MS.Translate.SQL_SERVER_SKU_DESCRIPTION}" a-link="${MS.Translate.SQL_SERVER_SKU_LINK}" a-link-text="${MS.Translate.COMMON_HERE}"></bpst-link>
+            </p>
+            <div if.bind="azureLocations && azureLocations.length > 0">
+                <p class="st-text">${MS.Translate.SQL_SERVER_LOCATION}</p>
+                <select class="btn btn-default dropdown-toggle st-input" disabled.bind="MS.HttpService.isServiceBusy" value.bind="sqlLocation">
+                    <option repeat.for="azureLocation of azureLocations" value.bind="azureLocation.Name">${azureLocation.DisplayName}</option>
+                </select>
+            </div>
+        </div>
+
+        <p class="st-float">
+            <button class="primary" click.trigger="onValidate()" if.bind="!MS.HttpService.isServiceBusy">${MS.Translate.SQL_SERVER_CHECK_AVAILABILITY}</button>
+        </p>
+    </div>-->
+
+    <div class="st-float" if.bind="showDatabases">
+        <p>
+            <span>${MS.Translate.SQL_SERVER_DATABASE}</span>
+            <span if.bind="showSqlRecoveryModeHint">${MS.Translate.SQL_SERVER_DATABASE_RECOVERY}</span>
+        </p>
+        <select class="btn btn-default dropdown-toggle st-input" disabled.bind="MS.HttpService.isServiceBusy" value.bind="database">
+            <option repeat.for="database of databases">${database}</option>
+        </select>
+        <div class="st-label-wrapper" if.bind="showCreateAzureSqlPrompt">
+            <label class="st-label">
+                <input type="checkbox" tabindex="-1" checked.bind="isCreateAzureSqlSelected" disabled.bind="MS.HttpService.isServiceBusy">
+                <span class="smallFontSize">${MS.Translate.SQL_SERVER_CREATE_AZURE_SQL}</span>
+            </label>
+        </div>
+    </div>
+</template>

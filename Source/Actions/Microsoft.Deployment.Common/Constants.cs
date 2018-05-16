@@ -9,7 +9,7 @@
         public const string AppsPath = "Apps";
         public const string AppsWebPath = "Web";
         public const string SiteCommonPath = "SiteCommon";
-        public const string ServiceUrl = "https://bpstservice.azurewebsites.net/";
+        public const string ServiceUrl = "https://appsourceservice.azurewebsites.net/";
 
         public const string ActionsPath = "Actions";
         public const string InitFile = "init.json";
@@ -24,7 +24,8 @@
         public const string AzureAuthUri = "https://login.microsoftonline.com/{0}/oauth2/authorize?";
         public const string AzureTokenUri = "https://login.microsoftonline.com/{0}/oauth2/token";
 
-        public const string MicrosoftClientId = "6b317a7c-0749-49bd-9e8c-d906aa43f64b";
+        //public const string MicrosoftClientId = "6b317a7c-0749-49bd-9e8c-d906aa43f64b";
+        public const string MicrosoftClientId = "541d0e0b-6940-4cd9-a31c-aa06e862511a";
         public const string ASClientId = "ecbb98ca-18e7-4f63-bb90-4534267a71b7";
         public const string MicrosoftClientIdCrm = "affab8de-076f-4b2c-b62d-29860cb41ff8";
         public const string MicrosoftClientIdPowerBI = "728cc6b6-9854-4601-a95a-152077d65d58";

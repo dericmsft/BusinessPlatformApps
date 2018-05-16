@@ -22,8 +22,8 @@ export class HttpService {
             this.baseUrl = 'http://localhost:2305/api/';
         } else {
             let url = window.location.href;
-            if (url.includes('bpsolutiontemplates')) {
-                this.baseUrl = 'https://bpstservice.azurewebsites.net/api/';
+            if (url.includes('appsource')) {
+                this.baseUrl = 'https://appsourceservice.azurewebsites.net/api/';
             } else {
                 url = url.replace('bpst', 'bpstservice');
                 let splitUrls = url.split('/');
