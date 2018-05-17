@@ -40,7 +40,7 @@
                 "title": "$translate(INIT_API_MANAGEMENT_CONNECT_TITLE)"
             },
             {
-                "displayname": "Target",
+                "displayname": "Blob Files",
                 "isAzureSql": true,
                 "name": "$SiteCommon$/pages-gallery/sql.html",
                 "newSqlDatabase": "apiManagementDB",

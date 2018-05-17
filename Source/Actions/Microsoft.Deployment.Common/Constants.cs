@@ -26,7 +26,8 @@
 
         //public const string MicrosoftClientId = "6b317a7c-0749-49bd-9e8c-d906aa43f64b";
         public const string MicrosoftClientId = "541d0e0b-6940-4cd9-a31c-aa06e862511a";
-        public const string ASClientId = "ecbb98ca-18e7-4f63-bb90-4534267a71b7";
+        //public const string ASClientId = "ecbb98ca-18e7-4f63-bb90-4534267a71b7";
+        public const string ASClientId = "19ad5c88-bd3e-49e4-a829-de68d1a18ab1";
         public const string MicrosoftClientIdCrm = "affab8de-076f-4b2c-b62d-29860cb41ff8";
         public const string MicrosoftClientIdPowerBI = "728cc6b6-9854-4601-a95a-152077d65d58";
         public const string MicrosoftClientSecret = "";
