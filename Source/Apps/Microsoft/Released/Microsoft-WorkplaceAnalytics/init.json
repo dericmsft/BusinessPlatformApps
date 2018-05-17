@@ -31,6 +31,17 @@
         "pricingCost": "$translate(INIT_WPA_PRICING_COST)",
         "pricingUrl": "$translate(INIT_TWITTER_PRICING_URL)"
       },
+      {
+        "displayname": "Target",
+        "isAzureSql": true,
+        "name": "$SiteCommon$/pages-gallery/blob.html",
+        "newSqlDatabase": "apiManagementDB",
+        "showAzureSql": false,
+        "showNewSqlOption": true,
+        "sqlInstance": "NewSql",
+        "subtitle": "$translate(INIT_SQL_SUBTITLE)",
+        "title": "$translate(INIT_SQL_TITLE)"
+      },
       //{
       //  "displayname": "API Management",
       //  "name": "$SiteCommon$/pages-gallery/api-management.html",
@@ -81,7 +92,7 @@
       },
       {
         "datastoreEntriesToValidate": [
-          "AzureToken"//,
+          "AzureToken" //,
           //"SqlConnectionString"
         ],
         "displayname": "Deploy",

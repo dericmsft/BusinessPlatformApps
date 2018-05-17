@@ -83,6 +83,7 @@
     BYOE_OPTION: `Bring your own entities? (Optional)`,
     BYOE_SUBTITLE: `Entities are collections of related words organized into categories. The template checks whether an entity is mentioned inside each article. You can then click on an entity in the report to cross filter the data. As part of the setup, you can define your own entities which will show up in the report. By default, we start you out with the following entities: Organizations, Locations, and People. As an example, if you are creating a movie themed report you could add Actors and Composers to the default list:`,
     BYOE_TITLE: `Bring Your Own Entities`,
+    BLOB_CONTAINER_NAME: `Blob Container Name:`,
     CHOOSE_SSAS_AZURE_ANALYSIS_SERVICES: `Yes`,
     CHOOSE_SSAS_DATA_STORAGE_MODE: `Use Azure Analysis Services (Optional):`,
     CHOOSE_SSAS_DESCRIPTION: `Azure Analysis Services is recommended for enterprise deployments supporting data volumes beyond the Power BI 1GB compressed data limit, improved performance, and almost real-time (data is refreshed every 15 minutes!).`,
