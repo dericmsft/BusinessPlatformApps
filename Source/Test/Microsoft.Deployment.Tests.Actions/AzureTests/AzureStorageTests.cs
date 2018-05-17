@@ -27,5 +27,22 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
             Assert.IsTrue(response.IsSuccess);
         }
 
+
+        [TestMethod]
+        public async Task ValidateConnectionToBlobStorage()
+        {
+            var dataStore = await TestManager.GetDataStore();
+
+            dataStore.AddToDataStore("StorageAccountName", "wpaplatformsa");
+            dataStore.AddToDataStore("StorageAccountDirectory", "2018-04-24-015245");
+            dataStore.AddToDataStore("StorageAccountContainer", "workplaceanalyticsfasttrackdemo");
+            var response = TestManager.ExecuteAction("Microsoft-GetStorageAccountKey", dataStore);
+            Assert.IsTrue(response.IsSuccess);
+
+
+            response = TestManager.ExecuteAction("Microsoft-ValidateConnectionToBlobStorage", dataStore);
+            Assert.IsTrue(response.IsSuccess);
+        }
+
     }
 }

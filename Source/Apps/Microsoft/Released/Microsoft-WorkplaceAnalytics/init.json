@@ -32,13 +32,8 @@
         "pricingUrl": "$translate(INIT_TWITTER_PRICING_URL)"
       },
       {
-        "displayname": "Target",
-        "isAzureSql": true,
+        "displayname": "Source",
         "name": "$SiteCommon$/pages-gallery/blob.html",
-        "newSqlDatabase": "apiManagementDB",
-        "showAzureSql": false,
-        "showNewSqlOption": true,
-        "sqlInstance": "NewSql",
         "subtitle": "$translate(INIT_SQL_SUBTITLE)",
         "title": "$translate(INIT_SQL_TITLE)"
       },
@@ -59,13 +54,13 @@
       //  "subtitle": "$translate(INIT_SQL_SUBTITLE)",
       //  "title": "$translate(INIT_SQL_TITLE)"
       //},
-      {
-        "name": "$SiteCommon$/pages-gallery/choose-analysis-server.html",
-        "displayname": "AAS",
-        "showDescription": true
+      //{
+      //  "name": "$SiteCommon$/pages-gallery/choose-analysis-server.html",
+      //  "displayname": "AAS",
+      //  "showDescription": true
 
-        //"ssasEnabled": "true"
-      },
+      //  //"ssasEnabled": "true"
+      //},
       {
         "displayname": "Login to Analysis Services",
         "name": "$SiteCommon$/pages-gallery/as-login.html",

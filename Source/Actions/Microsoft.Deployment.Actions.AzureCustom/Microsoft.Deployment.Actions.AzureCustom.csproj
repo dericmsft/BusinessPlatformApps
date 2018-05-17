@@ -221,6 +221,7 @@
     <Compile Include="AzureML\DeployAzureMLWebServiceFromFile.cs" />
     <Compile Include="AzureSql\CreateAzureSql.cs" />
     <Compile Include="AzureStorage\GetTextBlob.cs" />
+    <Compile Include="AzureStorage\ValidateConnectionToBlobStorage.cs" />
     <Compile Include="AzureToken\AzureTokenRequestMeta.cs" />
     <Compile Include="AzureToken\AzureTokenUtility.cs" />
     <Compile Include="AzureToken\CreateADApplication.cs" />
