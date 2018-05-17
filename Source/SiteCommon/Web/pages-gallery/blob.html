@@ -3,11 +3,11 @@
     <p class="st-subtitle">${subtitle}</p>
 
     <div class="st-float">
-        <p class="st-text">${MS.Translate.BLOB_CONTAINER_NAME}</p>
+        <p class="st-text">${MS.Translate.BLOB_ACCOUNT_NAME}</p>
         <input class="st-input" type="text" change.delegate="onInvalidate()" disabled.bind="MS.HttpService.isServiceBusy" value.bind="storageAccountName" />
         <span>${storageAccountSuffix}</span>
         <input class="st-input" type="text" change.delegate="onInvalidate()" disabled.bind="MS.HttpService.isServiceBusy" value.bind="storageAccountPath" />
-        <p class="st-text">${MS.Translate.BLOB_STORAGE_ACCOUNT_KEY}</p>
+        <p class="st-text">${MS.Translate.BLOB_ACCOUNT_KEY}</p>
         <input class="st-input" type="text" change.delegate="onInvalidate()" disabled.bind="MS.HttpService.isServiceBusy" value.bind="storageAccountKey" />
     </div>
 
