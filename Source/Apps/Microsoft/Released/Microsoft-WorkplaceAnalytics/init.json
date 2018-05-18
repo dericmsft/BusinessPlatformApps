@@ -96,6 +96,7 @@
         "uniqueIdFunction": "$save(this.MS.UtilityService.getUniqueId(10))",
         "SiteName": "$save(this.uniqueIdFunction)",
         "asDatabase": "SemanticModelTest",
+        "filename": "$save('SolutionTemplatePBI.pbix')",
         "filenameSSAS": "SolutionTemplatePBI.pbix"
       }
     ],
