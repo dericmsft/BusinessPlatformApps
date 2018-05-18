@@ -2,7 +2,7 @@
   "Install": {
     "Pages": [
       {
-        "architectureDiagram": "dist/Apps/Microsoft/Released/Microsoft-APIManagementTemplate/Web/Images/api-management.png",
+        "architectureDiagram": "dist/Apps/Microsoft/Released/Microsoft-WorkplaceAnalytics/Web/Images/WorkplaceAnalytics.png",
         "displayname": "Getting Started",
         "list1": [
           "$translate(INIT_GETTING_STARTED_AZURE_SUBSCRIPTION)",
@@ -25,7 +25,7 @@
           "Microsoft.AnalysisServices"
         ],
         "defaultLocation": "5",
-        "displayname": "Login",
+        "displayname": "Login to Azure",
         "name": "$SiteCommon$/pages-gallery/azure-login.html",
         "pricingCalculatorUrl": "$translate(INIT_WPA_PRICING_CALCULATOR_URL)",
         "pricingCost": "$translate(INIT_WPA_PRICING_COST)",
@@ -69,7 +69,7 @@
       },
       {
         "name": "$SiteCommon$/pages-gallery/ssas.html",
-        "displayname": "AAS Login",
+        "displayname": "AAS Details",
         "skip": "$run(this.MS.DataStore.getValue('ssasDisabled'))"
       },
       {
