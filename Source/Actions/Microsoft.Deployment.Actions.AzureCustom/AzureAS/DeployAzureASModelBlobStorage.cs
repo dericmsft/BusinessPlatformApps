@@ -3,7 +3,6 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Threading.Tasks;
 
-using Microsoft.AnalysisServices;
 using Microsoft.AnalysisServices.Tabular;
 using Microsoft.Deployment.Common.ActionModel;
 using Microsoft.Deployment.Common.Actions;
@@ -42,7 +41,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
                 server.Databases.Add(dbModel);
 
                 dbModel.Model.RequestRefresh(AnalysisServices.Tabular.RefreshType.Full);
-                dbModel.Update(UpdateOptions.ExpandFull);
+                dbModel.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
                 
                 server.Disconnect(true);
 
@@ -50,7 +49,8 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
             }
             catch (Exception e)
             {
-                return new ActionResponse(ActionStatus.Failure, string.Empty, e, null);
+                request.Logger.LogException(e);
+                return new ActionResponse(ActionStatus.Failure, string.Empty, e, "ErroDeployingModel");
             }
             finally
             {
