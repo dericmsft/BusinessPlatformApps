@@ -245,6 +245,9 @@
     </Content>
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="Template.proj" />
+    <None Include="Properties\PublishProfiles\appsource-service - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\appsource-service - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -21,11 +21,11 @@ namespace Microsoft.Deployment.Tests.Actions.TestHelpers
             AuthenticationContext context = new AuthenticationContext("https://login.windows.net/" + "common");
             AzureTokenRequestMeta meta = AzureTokenUtility.GetMetaFromOAuthType(openAuthorizationType);
 
-            var url = context.GetAuthorizationRequestUrlAsync(meta.Resource, meta.ClientId, new Uri("https://unittest/redirect.html"), UserIdentifier.AnyUser, "prompt=consent").Result;
+            var url = context.GetAuthorizationRequestUrlAsync(meta.Resource, meta.ClientId, new Uri("http://localhost:1503/redirect.html"), UserIdentifier.AnyUser, "prompt=consent").Result;
             WindowsFormsWebAuthenticationDialog form = new WindowsFormsWebAuthenticationDialog(null);
             form.WebBrowser.Navigated += delegate (object sender, WebBrowserNavigatedEventArgs args)
             {
-                if (args.Url.ToString().StartsWith("https://unittest/redirect.html"))
+                if (args.Url.ToString().StartsWith("http://localhost:1503/redirect.html"))
                 {
                     string tempcode = args.Url.ToString();
                     tempcode = tempcode.Substring(tempcode.IndexOf("code=") + 5);
@@ -45,7 +45,7 @@ namespace Microsoft.Deployment.Tests.Actions.TestHelpers
             DataStore datastore = new DataStore();
             datastore.AddToDataStore("code", code, DataStoreType.Private);
             datastore.AddToDataStore("AADTenant", "common", DataStoreType.Private);
-            datastore.AddToDataStore("AADRedirect", "https://unittest/redirect.html");
+            datastore.AddToDataStore("AADRedirect", "http://localhost:1503/redirect.html");
             datastore.AddToDataStore("oauthType", openAuthorizationType);
             var result = await TestManager.ExecuteActionAsync("Microsoft-GetAzureToken", datastore);
 

@@ -32,29 +32,54 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
         [TestMethod]
         public async Task DeployASModelTest()
         {
-            Dictionary<string, string> extraTokens = new Dictionary<string, string>();
-            extraTokens.Add("as", "AzureTokenAS"); // request AAS token 
+            try
+            {
 
-            // Deploy AS Model based of the following pramaters
-            var dataStore = await TestManager.GetDataStore(false, extraTokens);
+                Dictionary<string, string> extraTokens = new Dictionary<string, string>();
+                extraTokens.Add("as", "AzureTokenAS"); // request AAS token 
 
-            dataStore.AddToDataStore("StorageAccountName", "wpaplatformsa");
-            dataStore.AddToDataStore("StorageAccountType", "Standard_LRS");
-            dataStore.AddToDataStore("StorageAccountEncryptionEnabled", "true");
+                // Deploy AS Model based of the following pramaters
+                var dataStore = await TestManager.GetDataStore(true, extraTokens);
 
-            ActionResponse response = TestManager.ExecuteAction("Microsoft-GetStorageAccountKey", dataStore);
+                dataStore.AddToDataStore("StorageAccountName", "exppltsa");
+                dataStore.AddToDataStore("StorageAccountType", "Standard_LRS");
+                dataStore.AddToDataStore("StorageAccountEncryptionEnabled", "true");
+                dataStore.AddToDataStore("SelectedResourceGroup", "voloas");
+                dataStore.AddToDataStore("StorageAccountContainer", "rawdata");
 
-            Assert.IsTrue(response.IsSuccess);
+                ActionResponse response = TestManager.ExecuteAction("Microsoft-GetStorageAccountKey", dataStore);
 
-            dataStore.AddToDataStore("ASServerName", "wpads");
-            dataStore.AddToDataStore("ASServerUrl", "asazure://westus2.asazure.windows.net/wpads");
-            dataStore.AddToDataStore("ASLocation", "westus2");
-            dataStore.AddToDataStore("ASDatabase", "SemanticModelTest");
+                Assert.IsTrue(response.IsSuccess);
 
-            dataStore.AddToDataStore("modelFilePath", "Service/AzureAS/modelDefinition.json");
+                dataStore.AddToDataStore("blobUrl", "Model/modelDefinition.json");
+                dataStore.AddToDataStore("blobContentName", "asModelDefinition");
 
-            response = await TestManager.ExecuteActionAsync("Microsoft-DeployAzureASModelBlobStorage", dataStore, "Microsoft-WorkplaceAnalytics");
-            Assert.IsTrue(response.IsSuccess);
+                response = await TestManager.ExecuteActionAsync("Microsoft-GetASJsonBlob", dataStore);
+
+                Assert.IsTrue(response.IsSuccess);
+
+                dataStore.AddToDataStore("blobUrl", "Model/personHistoricalColumns.json");
+                dataStore.AddToDataStore("blobContentName", "asPersonHistoricalDefinition");
+
+                response = await TestManager.ExecuteActionAsync("Microsoft-GetASJsonBlob", dataStore);
+
+                Assert.IsTrue(response.IsSuccess);
+
+                dataStore.AddToDataStore("ASServerName", "wpads");
+                dataStore.AddToDataStore("ASServerUrl", "asazure://westus2.asazure.windows.net/wpads");
+                dataStore.AddToDataStore("ASLocation", "westus2");
+                dataStore.AddToDataStore("ASDatabase", "SemanticModel");
+
+                dataStore.AddToDataStore("modelFilePath", "Service/AzureAS/modelDefinition.json");
+
+                response = await TestManager.ExecuteActionAsync("Microsoft-DeployAzureASModelBlobStorage", dataStore, "Microsoft-WorkplaceAnalytics");
+                Assert.IsTrue(response.IsSuccess);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                throw;
+            }
         }
 
         [TestMethod]
@@ -94,5 +119,43 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
             response = await TestManager.ExecuteActionAsync("Microsoft-AssignPermissionsForUser", dataStore, "Microsoft-CRMSalesManagement");
             Assert.IsTrue(response.IsSuccess);
         }
+
+
+        [TestMethod]
+        public async Task GetJsonModel()
+        {
+            
+            Dictionary<string, string> extraTokens = new Dictionary<string, string>();
+            extraTokens.Add("as", "AzureTokenAS"); // request AAS token 
+
+            var dataStore = await TestManager.GetDataStore(false, extraTokens);
+
+            dataStore.AddToDataStore("ASServerUrl", "asazure://westus.asazure.windows.net/test");
+
+            dataStore.AddToDataStore("StorageAccountName", "exppltsa");
+            dataStore.AddToDataStore("StorageAccountType", "Standard_LRS");
+            dataStore.AddToDataStore("StorageAccountEncryptionEnabled", "true");
+
+            dataStore.AddToDataStore("SelectedResourceGroup", "voloas");
+
+            ActionResponse response = TestManager.ExecuteAction("Microsoft-GetStorageAccountKey", dataStore);
+
+            dataStore.AddToDataStore("StorageAccountDirectory", "Model");
+            dataStore.AddToDataStore("StorageAccountContainer", "rawdata");
+            dataStore.AddToDataStore("blobUrl", "https://exppltsa.blob.core.windows.net/rawdata/Model/modelDefinition.json");
+            dataStore.AddToDataStore("blobContentName", "asModelDefinition");
+
+            response = await TestManager.ExecuteActionAsync("Microsoft-GetASJsonBlob", dataStore);
+
+            Assert.IsTrue(response.IsSuccess);
+
+            dataStore.AddToDataStore("blobUrl", "https://exppltsa.blob.core.windows.net/rawdata/Model/personHistoricalColumns.json");
+            dataStore.AddToDataStore("blobContentName", "asPersonHistoricalDefinition");
+
+            response = await TestManager.ExecuteActionAsync("Microsoft-GetASJsonBlob", dataStore);
+
+            Assert.IsTrue(response.IsSuccess);
+        }
+
     }
 }
