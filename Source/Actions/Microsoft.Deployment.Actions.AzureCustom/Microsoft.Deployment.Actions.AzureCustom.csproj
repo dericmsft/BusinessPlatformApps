@@ -220,6 +220,7 @@
     <Compile Include="AzureML\ExportAzureMLExperiment.cs" />
     <Compile Include="AzureML\DeployAzureMLWebServiceFromFile.cs" />
     <Compile Include="AzureSql\CreateAzureSql.cs" />
+    <Compile Include="AzureStorage\GetASJsonBlob.cs" />
     <Compile Include="AzureStorage\GetTextBlob.cs" />
     <Compile Include="AzureStorage\ValidateConnectionToBlobStorage.cs" />
     <Compile Include="AzureToken\AzureTokenRequestMeta.cs" />
@@ -314,6 +315,7 @@
     <Compile Include="Twitter\ValidateCognitiveKey.cs" />
     <Compile Include="Twitter\ValidateTwitterAccount.cs" />
     <Compile Include="Twitter\VerifyTwitterConnection.cs" />
+    <Compile Include="Wpa\Utilities\ModelParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

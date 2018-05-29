@@ -1,16 +1,16 @@
 ﻿{
-  "name": "SemanticModelTest",
+  "name": "SemanticModel",
   "compatibilityLevel": 1400,
   "model": {
     "culture": "en-US",
     "dataSources": [
       {
         "type": "structured",
-        "name": "AzureBlobs/https://wpaplatformsa blob core windows net/",
+        "name": "AzureBlobs/https://__storageAccountName__ blob core windows net/",
         "connectionDetails": {
           "protocol": "azure-blobs",
           "address": {
-            "account": "wpaplatformsa",
+            "account": "__storageAccountName__",
             "domain": "blob.core.windows.net"
           },
           "authentication": null,
@@ -19,11 +19,198 @@
         "options": {},
         "credential": {
           "AuthenticationKind": "Key",
-          "Key": "qPtqkFVwUZ5WRHuy8DDzePg+JGgs+gU7BVpWPfpm+XX1lJYmxzIwUuYwIG3UkWdGcEGzTdJJNfHfBT7R71mVxQ=="
+          "Key": "__authenticationKey__"
         }
       }
     ],
     "tables": [
+      {
+        "name": "PersonHistorical",
+        "columns": [
+          {
+            "name": "PersonHistoricalId",
+            "dataType": "string",
+            "sourceColumn": "PersonHistoricalId"
+          },
+          {
+            "name": "EmailAddress",
+            "dataType": "string",
+            "sourceColumn": "EmailAddress"
+          },
+          {
+            "name": "PopulationType",
+            "dataType": "string",
+            "sourceColumn": "PopulationType"
+          },
+          {
+            "name": "ManagerId",
+            "dataType": "string",
+            "sourceColumn": "ManagerId"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"AzureBlobs/https://__storageAccountName__ blob core windows net/\",",
+                "    __containername__1 = Source{[Name=\"__containername__\"]}[Data],",
+                "    #\"https://__storageAccountName__ blob core windows net/__containername__/_PersonHistorical csv\" = __containername__1{[#\"Folder Path\"=\"https://__storageAccountName__.blob.core.windows.net/__containername__/\",Name=\"PersonHistorical.csv\"]}[Content],",
+                "    #\"Imported CSV\" = Csv.Document(#\"https://__storageAccountName__ blob core windows net/__containername__/_PersonHistorical csv\",[Delimiter=\",\", Columns=19, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"PersonHistoricalId\", type text}, {\"EmailAddress\", type text}, {\"PopulationType\", type text}, {\"ManagerId\", type text}})",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Meaningful",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "MeaningfulID",
+            "dataType": "int64",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[MeaningfulID]"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "MeaningfulValue",
+            "dataType": "int64",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[MeaningfulValue]"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "MeaningfulDescription",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[MeaningfulDescription]"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": [
+                "DATATABLE(\"MeaningfulID\",INTEGER,",
+                "                        \"MeaningfulValue\",INTEGER,",
+                "\t\t\"MeaningfulDescription\",STRING,",
+                "{ ",
+                "{\"1\",\"1\",\"more than 1\"},",
+                "{\"2\",\"2\",\"more than 2\"},",
+                "{\"3\",\"3\",\"more than 3\"},",
+                "{\"4\",\"4\",\"more than 4\"},",
+                "{\"5\",\"5\",\"more than 5\"},",
+                "{\"6\",\"6\",\"more than 6\"},",
+                "{\"7\",\"7\",\"more than 7\"},",
+                "{\"8\",\"8\",\"more than 8\"},",
+                "{\"9\",\"9\",\"more than 9\"},",
+                "{\"10\",\"10\",\"more than 10\"},",
+                "{\"11\",\"11\",\"more than 11\"},",
+                "{\"12\",\"12\",\"more than 12\"},",
+                "{\"13\",\"13\",\"more than 13\"},",
+                "{\"14\",\"14\",\"more than 14\"},",
+                "{\"15\",\"15\",\"more than 15\"},",
+                "{\"16\",\"16\",\"more than 16\"},",
+                "{\"17\",\"17\",\"more than 17\"},",
+                "{\"18\",\"18\",\"more than 18\"}",
+                "}",
+                ")"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Interactions",
+        "columns": [
+          {
+            "name": "InteractionID",
+            "dataType": "string",
+            "sourceColumn": "InteractionID"
+          },
+          {
+            "name": "LocalStartTime",
+            "dataType": "dateTime",
+            "sourceColumn": "LocalStartTime"
+          },
+          {
+            "name": "nodepid",
+            "dataType": "string",
+            "sourceColumn": "nodepid"
+          },
+          {
+            "name": "edgepid",
+            "dataType": "string",
+            "sourceColumn": "edgepid"
+          },
+          {
+            "name": "PersonTimeSpentInMinutes",
+            "dataType": "double",
+            "sourceColumn": "PersonTimeSpentInMinutes"
+          },
+          {
+            "name": "DurationMinutesAdjusted",
+            "dataType": "int64",
+            "sourceColumn": "DurationMinutesAdjusted"
+          },
+          {
+            "name": "attendeecount",
+            "dataType": "int64",
+            "sourceColumn": "attendeecount"
+          },
+          {
+            "name": "InteractionType",
+            "dataType": "string",
+            "sourceColumn": "InteractionType"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"AzureBlobs/https://__storageAccountName__ blob core windows net/\",",
+                "    __containername__1 = Source{[Name=\"__containername__\"]}[Data],",
+                "    #\"https://__storageAccountName__ blob core windows net/__containername__/_Interactions csv\" = __containername__1{[#\"Folder Path\"=\"https://__storageAccountName__.blob.core.windows.net/__containername__/\",Name=\"Interactions.csv\"]}[Content],",
+                "    #\"Imported CSV\" = Csv.Document(#\"https://__storageAccountName__ blob core windows net/__containername__/_Interactions csv\",[Delimiter=\",\", Columns=8, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"InteractionID\", type text}, {\"LocalStartTime\", type datetime}, {\"nodepid\", type text}, {\"edgepid\", type text}, {\"PersonTimeSpentInMinutes\", type number}, {\"DurationMinutesAdjusted\", Int64.Type}, {\"attendeecount\", Int64.Type}, {\"InteractionType\", type text}})",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Meaningful_Para",
+            "expression": " IF(HASONEVALUE(Meaningful[MeaningfulValue]),VALUES(Meaningful[MeaningfulValue]),blank())"
+          },
+          {
+            "name": "InteractionsCount",
+            "expression": " COUNTROWS(SUMMARIZE(Interactions,Interactions[InteractionID],Interactions[InteractionType]))"
+          },
+          {
+            "name": "MeaningfulInteractions",
+            "expression": " CALCULATE(if([InteractionsCount]>= [Meaningful_Para],1,0))"
+          }
+        ]
+      },
       {
         "name": "MailParticipants",
         "columns": [
@@ -61,10 +248,10 @@
               "type": "m",
               "expression": [
                 "let",
-                "    Source = #\"AzureBlobs/https://wpaplatformsa blob core windows net/\",",
-                "    workplaceanalyticsfasttrackdemo1 = Source{[Name=\"workplaceanalyticsfasttrackdemo\"]}[Data],",
-                "    #\"https://wpaplatformsa blob core windows net/workplaceanalyticsfasttrackdemo/_2018-04-24-015245/MailParticipants csv\" = workplaceanalyticsfasttrackdemo1{[#\"Folder Path\"=\"https://wpaplatformsa.blob.core.windows.net/workplaceanalyticsfasttrackdemo/\",Name=\"2018-04-24-015245/MailParticipants.csv\"]}[Content],",
-                "    #\"Imported CSV\" = Csv.Document(#\"https://wpaplatformsa blob core windows net/workplaceanalyticsfasttrackdemo/_2018-04-24-015245/MailParticipants csv\",[Delimiter=\",\", Columns=5, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                "    Source = #\"AzureBlobs/https://__storageAccountName__ blob core windows net/\",",
+                "    __containername__1 = Source{[Name=\"__containername__\"]}[Data],",
+                "    #\"https://__storageAccountName__ blob core windows net/__containername__/_MailParticipants csv\" = __containername__1{[#\"Folder Path\"=\"https://__storageAccountName__.blob.core.windows.net/__containername__/\",Name=\"MailParticipants.csv\"]}[Content],",
+                "    #\"Imported CSV\" = Csv.Document(#\"https://__storageAccountName__ blob core windows net/__containername__/_MailParticipants csv\",[Delimiter=\",\", Columns=5, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
                 "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"MailId\", type text}, {\"PersonHistoricalId\", type text}, {\"IsSender\", type logical}, {\"LocalSentTime\", type datetime}, {\"PersonTimeSpentInMinutes\", type number}})",
                 "in",
@@ -116,10 +303,10 @@
               "type": "m",
               "expression": [
                 "let",
-                "    Source = #\"AzureBlobs/https://wpaplatformsa blob core windows net/\",",
-                "    workplaceanalyticsfasttrackdemo1 = Source{[Name=\"workplaceanalyticsfasttrackdemo\"]}[Data],",
-                "    #\"https://wpaplatformsa blob core windows net/workplaceanalyticsfasttrackdemo/_2018-04-24-015245/Mails csv\" = workplaceanalyticsfasttrackdemo1{[#\"Folder Path\"=\"https://wpaplatformsa.blob.core.windows.net/workplaceanalyticsfasttrackdemo/\",Name=\"2018-04-24-015245/Mails.csv\"]}[Content],",
-                "    #\"Imported CSV\" = Csv.Document(#\"https://wpaplatformsa blob core windows net/workplaceanalyticsfasttrackdemo/_2018-04-24-015245/Mails csv\",[Delimiter=\",\", Columns=6, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                "    Source = #\"AzureBlobs/https://__storageAccountName__ blob core windows net/\",",
+                "    __containername__1 = Source{[Name=\"__containername__\"]}[Data],",
+                "    #\"https://__storageAccountName__ blob core windows net/__containername__/_Mails csv\" = __containername__1{[#\"Folder Path\"=\"https://__storageAccountName__.blob.core.windows.net/__containername__/\",Name=\"Mails.csv\"]}[Content],",
+                "    #\"Imported CSV\" = Csv.Document(#\"https://__storageAccountName__ blob core windows net/__containername__/_Mails csv\",[Delimiter=\",\", Columns=6, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
                 "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"MailId\", type text}, {\"ConversationId\", type text}, {\"Subject\", type text}, {\"SentTime\", type datetime}, {\"SenderTimeSpentInMinutes\", type number}, {\"NumberOfRecipients\", Int64.Type}})",
                 "in",
@@ -181,10 +368,10 @@
               "type": "m",
               "expression": [
                 "let",
-                "    Source = #\"AzureBlobs/https://wpaplatformsa blob core windows net/\",",
-                "    workplaceanalyticsfasttrackdemo1 = Source{[Name=\"workplaceanalyticsfasttrackdemo\"]}[Data],",
-                "    #\"https://wpaplatformsa blob core windows net/workplaceanalyticsfasttrackdemo/_2018-04-24-015245/MeetingParticipants csv\" = workplaceanalyticsfasttrackdemo1{[#\"Folder Path\"=\"https://wpaplatformsa.blob.core.windows.net/workplaceanalyticsfasttrackdemo/\",Name=\"2018-04-24-015245/MeetingParticipants.csv\"]}[Content],",
-                "    #\"Imported CSV\" = Csv.Document(#\"https://wpaplatformsa blob core windows net/workplaceanalyticsfasttrackdemo/_2018-04-24-015245/MeetingParticipants csv\",[Delimiter=\",\", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                "    Source = #\"AzureBlobs/https://__storageAccountName__ blob core windows net/\",",
+                "    __containername__1 = Source{[Name=\"__containername__\"]}[Data],",
+                "    #\"https://__storageAccountName__ blob core windows net/__containername__/_MeetingParticipants csv\" = __containername__1{[#\"Folder Path\"=\"https://__storageAccountName__.blob.core.windows.net/__containername__/\",Name=\"MeetingParticipants.csv\"]}[Content],",
+                "    #\"Imported CSV\" = Csv.Document(#\"https://__storageAccountName__ blob core windows net/__containername__/_MeetingParticipants csv\",[Delimiter=\",\", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
                 "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"MeetingId\", type text}, {\"PersonHistoricalId\", type text}, {\"LocalStartTime\", type datetime}, {\"IsOrganizer\", type logical}, {\"IsDoubleBooked\", type logical}, {\"Response\", type text}, {\"DurationMinutesAdjusted\", Int64.Type}, {\"NumberOfEmailsDuringMeeting\", Int64.Type}})",
                 "in",
@@ -198,69 +385,34 @@
         "name": "Meetings",
         "columns": [
           {
-            "name": "MeetingId",
+            "name": "Name",
             "dataType": "string",
-            "sourceColumn": "MeetingId"
+            "sourceColumn": "Name"
           },
           {
-            "name": "ICalUid",
-            "dataType": "int64",
-            "sourceColumn": "ICalUid"
-          },
-          {
-            "name": "Subject",
+            "name": "Extension",
             "dataType": "string",
-            "sourceColumn": "Subject"
+            "sourceColumn": "Extension"
           },
           {
-            "name": "IsRecurring",
-            "dataType": "boolean",
-            "sourceColumn": "IsRecurring"
-          },
-          {
-            "name": "IsCancelled",
-            "dataType": "boolean",
-            "sourceColumn": "IsCancelled"
-          },
-          {
-            "name": "StartTime",
+            "name": "Date accessed",
             "dataType": "dateTime",
-            "sourceColumn": "StartTime"
+            "sourceColumn": "Date accessed"
           },
           {
-            "name": "DurationHours",
-            "dataType": "double",
-            "sourceColumn": "DurationHours"
+            "name": "Date modified",
+            "dataType": "dateTime",
+            "sourceColumn": "Date modified"
           },
           {
-            "name": "TotalAccept",
-            "dataType": "int64",
-            "sourceColumn": "TotalAccept"
+            "name": "Date created",
+            "dataType": "dateTime",
+            "sourceColumn": "Date created"
           },
           {
-            "name": "TotalDecline",
-            "dataType": "int64",
-            "sourceColumn": "TotalDecline"
-          },
-          {
-            "name": "TotalNoResponse",
-            "dataType": "int64",
-            "sourceColumn": "TotalNoResponse"
-          },
-          {
-            "name": "TotalAttendees",
-            "dataType": "int64",
-            "sourceColumn": "TotalAttendees"
-          },
-          {
-            "name": "TotalDoubleBooked",
-            "dataType": "int64",
-            "sourceColumn": "TotalDoubleBooked"
-          },
-          {
-            "name": "TotalNumberOfEmailsDuringMeeting",
-            "dataType": "int64",
-            "sourceColumn": "TotalNumberOfEmailsDuringMeeting"
+            "name": "Folder Path",
+            "dataType": "string",
+            "sourceColumn": "Folder Path"
           }
         ],
         "partitions": [
@@ -271,177 +423,22 @@
               "type": "m",
               "expression": [
                 "let",
-                "    Source = #\"AzureBlobs/https://wpaplatformsa blob core windows net/\",",
-                "    workplaceanalyticsfasttrackdemo1 = Source{[Name=\"workplaceanalyticsfasttrackdemo\"]}[Data],",
-                "    #\"https://wpaplatformsa blob core windows net/workplaceanalyticsfasttrackdemo/_2018-04-24-015245/Meetings csv\" = workplaceanalyticsfasttrackdemo1{[#\"Folder Path\"=\"https://wpaplatformsa.blob.core.windows.net/workplaceanalyticsfasttrackdemo/\",Name=\"2018-04-24-015245/Meetings.csv\"]}[Content],",
-                "    #\"Imported CSV\" = Csv.Document(#\"https://wpaplatformsa blob core windows net/workplaceanalyticsfasttrackdemo/_2018-04-24-015245/Meetings csv\",[Delimiter=\",\", Columns=13, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
-                "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
-                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"MeetingId\", type text}, {\"ICalUid\", Int64.Type}, {\"Subject\", type text}, {\"IsRecurring\", type logical}, {\"IsCancelled\", type logical}, {\"StartTime\", type datetime}, {\"DurationHours\", type number}, {\"TotalAccept\", Int64.Type}, {\"TotalDecline\", Int64.Type}, {\"TotalNoResponse\", Int64.Type}, {\"TotalAttendees\", Int64.Type}, {\"TotalDoubleBooked\", Int64.Type}, {\"TotalNumberOfEmailsDuringMeeting\", Int64.Type}})",
+                "    Source = #\"AzureBlobs/https://__storageAccountName__ blob core windows net/\",",
+                "    __containername__1 = Source{[Name=\"__containername__\"]}[Data]",
                 "in",
-                "    #\"Changed Type\""
+                "    __containername__1"
               ]
             }
           }
         ]
-      },
-      {
-        "name": "PersonHistorical",
-        "columns": [
-          {
-            "name": "PersonHistoricalId",
-            "dataType": "string",
-            "sourceColumn": "PersonHistoricalId"
-          },
-          {
-            "name": "EmailAddress",
-            "dataType": "string",
-            "sourceColumn": "EmailAddress"
-          },
-          {
-            "name": "StartDate",
-            "dataType": "dateTime",
-            "sourceColumn": "StartDate"
-          },
-          {
-            "name": "EndDate",
-            "dataType": "dateTime",
-            "sourceColumn": "EndDate"
-          },
-          {
-            "name": "PopulationType",
-            "dataType": "string",
-            "sourceColumn": "PopulationType"
-          },
-          {
-            "name": "ManagerId",
-            "dataType": "string",
-            "sourceColumn": "ManagerId"
-          },
-          {
-            "name": "IsInternal",
-            "dataType": "boolean",
-            "sourceColumn": "IsInternal"
-          },
-          {
-            "name": "Domain",
-            "dataType": "string",
-            "sourceColumn": "Domain"
-          },
-          {
-            "name": "FunctionType",
-            "dataType": "string",
-            "sourceColumn": "FunctionType"
-          },
-          {
-            "name": "Organization",
-            "dataType": "string",
-            "sourceColumn": "Organization"
-          },
-          {
-            "name": "LevelDesignation",
-            "dataType": "string",
-            "sourceColumn": "LevelDesignation"
-          },
-          {
-            "name": "Layer",
-            "dataType": "int64",
-            "sourceColumn": "Layer"
-          },
-          {
-            "name": "tenuremonths",
-            "dataType": "int64",
-            "sourceColumn": "tenuremonths"
-          },
-          {
-            "name": "tenurebucket",
-            "dataType": "string",
-            "sourceColumn": "tenurebucket"
-          },
-          {
-            "name": "managerrating",
-            "dataType": "string",
-            "sourceColumn": "managerrating"
-          },
-          {
-            "name": "engagement",
-            "dataType": "string",
-            "sourceColumn": "engagement"
-          },
-          {
-            "name": "keytalent",
-            "dataType": "string",
-            "sourceColumn": "keytalent"
-          },
-          {
-            "name": "quotaattainment",
-            "dataType": "string",
-            "sourceColumn": "quotaattainment"
-          },
-          {
-            "name": "TimeZone",
-            "dataType": "string",
-            "sourceColumn": "TimeZone"
-          }
-        ],
-        "partitions": [
-          {
-            "name": "Partition",
-            "dataView": "full",
-            "source": {
-              "type": "m",
-              "expression": [
-                "let",
-                "    Source = #\"AzureBlobs/https://wpaplatformsa blob core windows net/\",",
-                "    workplaceanalyticsfasttrackdemo1 = Source{[Name=\"workplaceanalyticsfasttrackdemo\"]}[Data],",
-                "    #\"https://wpaplatformsa blob core windows net/workplaceanalyticsfasttrackdemo/_2018-04-24-015245/PersonHistorical csv\" = workplaceanalyticsfasttrackdemo1{[#\"Folder Path\"=\"https://wpaplatformsa.blob.core.windows.net/workplaceanalyticsfasttrackdemo/\",Name=\"2018-04-24-015245/PersonHistorical.csv\"]}[Content],",
-                "    #\"Imported CSV\" = Csv.Document(#\"https://wpaplatformsa blob core windows net/workplaceanalyticsfasttrackdemo/_2018-04-24-015245/PersonHistorical csv\",[Delimiter=\",\", Columns=19, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
-                "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),",
-                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"PersonHistoricalId\", type text}, {\"EmailAddress\", type text}, {\"StartDate\", type datetime}, {\"EndDate\", type datetime}, {\"PopulationType\", type text}, {\"ManagerId\", type text}, {\"IsInternal\", type logical}, {\"Domain\", type text}, {\"FunctionType\", type text}, {\"Organization\", type text}, {\"LevelDesignation\", type text}, {\"Layer\", Int64.Type}, {\"tenuremonths\", Int64.Type}, {\"tenurebucket\", type text}, {\"managerrating\", type text}, {\"engagement\", type text}, {\"keytalent\", type text}, {\"quotaattainment\", type text}, {\"TimeZone\", type text}})",
-                "in",
-                "    #\"Changed Type\""
-              ]
-            }
-          }
-        ]
-      }
-    ],
-    "relationships": [
-      {
-        "name": "f4b4c87d-3500-4c49-b1c2-3f24318a666c",
-        "fromTable": "MeetingParticipants",
-        "fromColumn": "PersonHistoricalId",
-        "toTable": "PersonHistorical",
-        "toColumn": "PersonHistoricalId"
-      },
-      {
-        "name": "4cbb8d80-6be4-41ca-9c18-f48639db77b4",
-        "fromTable": "MeetingParticipants",
-        "fromColumn": "MeetingId",
-        "toTable": "Meetings",
-        "toColumn": "MeetingId"
-      },
-      {
-        "name": "d64df926-a3dd-44c0-8794-109c6c227983",
-        "fromTable": "MailParticipants",
-        "fromColumn": "MailId",
-        "toTable": "Mails",
-        "toColumn": "MailId"
-      },
-      {
-        "name": "2d27326d-e84b-4c64-b9d2-ae6489726db4",
-        "fromTable": "MailParticipants",
-        "fromColumn": "PersonHistoricalId",
-        "toTable": "PersonHistorical",
-        "toColumn": "PersonHistoricalId"
       }
     ],
     "annotations": [
       {
         "name": "ClientCompatibilityLevel",
-        "name": "ClientCompatibilityLevel",
         "value": "500"
       }
     ]
   },
-  "id": "SemanticModelTest"
+  "id": "SemanticModel"
 }

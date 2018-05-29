@@ -95,7 +95,7 @@
         "uniqueId": "$save(this.MS.UtilityService.getUniqueId(10))",
         "uniqueIdFunction": "$save(this.MS.UtilityService.getUniqueId(10))",
         "SiteName": "$save(this.uniqueIdFunction)",
-        "asDatabase": "SemanticModelTest",
+        "asDatabase": "SemanticModel",
         "filename": "$save('SolutionTemplatePBI.pbix')",
         "filenameSSAS": "SolutionTemplatePBI.pbix"
       }
@@ -103,7 +103,19 @@
 
     "Actions": [
       {
-        "ASDatabase": "SemanticModelTest",
+        "displayname": "Retrieve Database Model from Blob Storage",
+        "name": "Microsoft-GetASJsonBlob",
+        "blobUrl": "$run('https://' + this.MS.DataStore.getValue('StorageAccountName') + '.blob.core.windows.net/' + this.MS.DataStore.getValue('StorageAccountContainer') + '/Model/modelDefinition.json')",
+        "blobContentName": "asModelDefinition"
+      },
+      {
+        "displayname": "Retrieve Person Historical Model from Blob Storage",
+        "name": "Microsoft-GetASJsonBlob",
+        "blobUrl": "$run('https://' + this.MS.DataStore.getValue('StorageAccountName') + '.blob.core.windows.net/' + this.MS.DataStore.getValue('StorageAccountContainer') + '/Model/personHistoricalColumns.json')",
+        "blobContentName": "asPersonHistoricalDefinition"
+      },
+      {
+        "ASDatabase": "SemanticModel",
         "displayname": "$translate(INIT_ACTION_DEPLOYING_AS_MODEL)",
         "name": "Microsoft-DeployAzureASModelBlobStorage",
         "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )",
@@ -135,7 +147,7 @@
         "name": "Microsoft-AssignPermissionsForUser",
         "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )",
         "UserToAdd": "$ds(SPNUser)",
-        "ASDatabase": "SemanticModelTest"
+        "ASDatabase": "SemanticModel"
       },
       {
         "AppSettingKeys": {
@@ -146,7 +158,7 @@
           "asServer": "$ds(ASServerUrl)",
           //"connStringSql": "$dsall(SqlConnectionString)[0]",
           //"schema": "[pbist_apimgmt]",
-          "databaseAS": "SemanticModelTest",
+          "databaseAS": "SemanticModel",
           "functionName": "$run('asscheduler' + this.MS.DataStore.getValue('uniqueId'))"
         },
 
@@ -169,7 +181,7 @@
         "DeploymentName": "Function",
         "displayname": "$translate(INIT_ACTION_APIM_DEPLOY_FUNCTION_VALIDATING)",
         "name": "Microsoft-WaitForArmDeploymentStatus"
-      }//,
+      } //,
       //{
       //  "AppSettingKeys": {
       //    "TemplatesSQL": "$dsall(SqlConnectionString)[0]"
