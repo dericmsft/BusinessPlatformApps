@@ -115,7 +115,7 @@ namespace Microsoft.Deployment.Tests.Actions.TestHelpers
             UserInfo info = new UserInfo();
             info.ActionName = actionName;
             info.AppName = templateName;
-            info.WebsiteRootUrl = "https://unittest";
+            info.WebsiteRootUrl = "http://localhost:1503";
             return Controller.ExecuteAction(info, new ActionRequest() { DataStore = datastore }).Result;
         }
 
@@ -124,7 +124,7 @@ namespace Microsoft.Deployment.Tests.Actions.TestHelpers
             UserInfo info = new UserInfo();
             info.ActionName = actionName;
             info.AppName = templateName;
-            info.WebsiteRootUrl = "https://unittest";
+            info.WebsiteRootUrl = "http://localhost:1503";
             return await Controller.ExecuteAction(info, new ActionRequest() { DataStore = datastore });
         }
 
