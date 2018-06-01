@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Microsoft.AnalysisServices;
-using Microsoft.AnalysisServices.Tabular;
+using TOM=Microsoft.AnalysisServices.Tabular;
 using Microsoft.Deployment.Tests.Actions.TestHelpers;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

@@ -15,23 +15,32 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
         [TestMethod]
         public async Task CreateAzureFunctionAndDeployConnectionString()
         {
-            var dataStore = await TestManager.GetDataStore();
+            //var dataStore = await TestManager.GetDataStore();
+
+            Dictionary<string, string> extraTokens = new Dictionary<string, string>();
+            extraTokens.Add("as", "AzureTokenAS"); // request AAS token 
+
+            // Deploy AS Model based of the following pramaters
+            var dataStore = await TestManager.GetDataStore(true, extraTokens);
+
+            dataStore.AddToDataStore("SelectedResourceGroup", "voloas");
 
             //// Deploy Function
+
             dataStore.AddToDataStore("DeploymentName", "FunctionDeploymentTest");
             dataStore.AddToDataStore("FunctionName", "unittestfunction6");
-            dataStore.AddToDataStore("RepoUrl", "https://github.com/MohaaliMicrosoft/AnalysisServicesRefresh");
+            dataStore.AddToDataStore("RepoUrl", "https://github.com/dericmsft/AnalysisServicesRefresh");
             dataStore.AddToDataStore("sku", "Standard");
             
 
-            //var response = TestManager.ExecuteAction("Microsoft-DeployAzureFunction", dataStore);
-            //Assert.IsTrue(response.IsSuccess);
-            //response = TestManager.ExecuteAction("Microsoft-WaitForArmDeploymentStatus", dataStore);
-            //Assert.IsTrue(response.IsSuccess);
+            var response = TestManager.ExecuteAction("Microsoft-DeployAzureFunction", dataStore);
+            Assert.IsTrue(response.IsSuccess);
+            response = TestManager.ExecuteAction("Microsoft-WaitForArmDeploymentStatus", dataStore);
+            Assert.IsTrue(response.IsSuccess);
 
             //// Deploy Function
             dataStore.AddToDataStore("DeploymentName", "FunctionDeploymentTest");
-            dataStore.AddToDataStore("StorageAccountName", "testmostorage1234");
+            dataStore.AddToDataStore("StorageAccountName", "exppltsa");
             dataStore.AddToDataStore("StorageAccountType", "Standard_LRS");
             dataStore.AddToDataStore("StorageAccountEncryptionEnabled", "true");
 
@@ -40,7 +49,7 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
             //response = TestManager.ExecuteAction("Microsoft-WaitForArmDeploymentStatus", dataStore);
             //Assert.IsTrue(response.IsSuccess);
 
-            var response = TestManager.ExecuteAction("Microsoft-GetStorageAccountKey", dataStore);
+            response = TestManager.ExecuteAction("Microsoft-GetStorageAccountKey", dataStore);
             Assert.IsTrue(response.IsSuccess);
 
             JObject val = new JObject();
@@ -57,12 +66,18 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
         [TestMethod]
         public async Task CreateAzureFunctionForNews()
         {
-            var dataStore = await TestManager.GetDataStore();
+            Dictionary<string, string> extraTokens = new Dictionary<string, string>();
+            extraTokens.Add("as", "AzureTokenAS"); // request AAS token 
+
+            // Deploy AS Model based of the following pramaters
+            var dataStore = await TestManager.GetDataStore(true, extraTokens);
+
+            dataStore.AddToDataStore("SelectedResourceGroup", "voloas");
 
             //// Deploy Function
             dataStore.AddToDataStore("DeploymentName", "FunctionDeploymentTest");
             dataStore.AddToDataStore("FunctionName", "unittestfunction8");
-            dataStore.AddToDataStore("RepoUrl", "https://github.com/juluczni/AzureFunctionsNewsTemplate");
+            dataStore.AddToDataStore("RepoUrl", "https://github.com/dericmsft/AnalysisServicesRefresh");
 
             var response = TestManager.ExecuteAction("Microsoft-DeployAzureFunction", dataStore);
             Assert.IsTrue(response.IsSuccess);

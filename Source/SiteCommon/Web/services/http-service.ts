@@ -153,6 +153,7 @@ export class HttpService {
         let uniqueId = this.MS.UtilityService.getUniqueId(20);
         var request = this.HttpClient.createRequest(relativeUrl);
         request = request
+            .withTimeout(1000 * 60 * 10)
             .withBaseUrl(this.baseUrl)
             .withHeader('Content-Type', 'application/json; charset=utf-8')
             .withHeader('UserGeneratedId', this.MS.LoggerService.UserGenId)

@@ -3,7 +3,7 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Threading.Tasks;
 
-using Microsoft.AnalysisServices;
+using AS = Microsoft.AnalysisServices;
 using Microsoft.AnalysisServices.Tabular;
 using Microsoft.Deployment.Common.ActionModel;
 using Microsoft.Deployment.Common.Actions;
@@ -40,7 +40,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
                 // Deploy database definition
                 var obj = JsonUtility.GetJsonObjectFromJsonString(xmlaContents);
                 obj["create"]["database"]["name"] = asDatabase;
-                XmlaResultCollection response = server.Execute(obj.ToString());
+                AS.XmlaResultCollection response = server.Execute(obj.ToString());
 
                 if (response.ContainsErrors)
                 {
@@ -51,7 +51,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
                 server.Refresh(true);
                 db = server.Databases.FindByName(asDatabase);
                 ((ProviderDataSource)db.Model.DataSources[0]).ConnectionString = $"Provider=SQLNCLI11;Data Source=tcp:{connectionStringObj.Server};Persist Security Info=True;User ID={connectionStringObj.Username};Password={connectionStringObj.Password};Initial Catalog={connectionStringObj.Database}";
-                db.Update(UpdateOptions.ExpandFull);
+                db.Update(AS.UpdateOptions.ExpandFull);
 
                 // Process if there's a tag requesting it
                 if (db.Model.DataSources[0].Annotations.ContainsName("MustProcess"))

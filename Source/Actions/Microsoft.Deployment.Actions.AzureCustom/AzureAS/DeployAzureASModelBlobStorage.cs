@@ -28,20 +28,36 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
             string folderName = request.DataStore.GetValue("StorageAccountDirectory");
             //get data store location and connection string 
             //get get key for the blob storage 
-            string connectionString = ValidateConnectionToAS.GetASConnectionString(request, azureToken, serverUrl);
-
-
-            string jsonContents = !string.IsNullOrWhiteSpace(modelDefinition) ? modelDefinition : File.ReadAllText(request.Info.App.AppFilePath + "/" + modelFile);
-
-            if(!string.IsNullOrWhiteSpace(personHistorialDefinition))
+            try
             {
-                jsonContents = ModelParser.AddColumns(jsonContents, "PersonHistorical", personHistorialDefinition);
+                string connectionString = ValidateConnectionToAS.GetASConnectionString(request, azureToken, serverUrl);
+
+
+                string jsonContents = !string.IsNullOrWhiteSpace(modelDefinition) ? modelDefinition : File.ReadAllText(request.Info.App.AppFilePath + "/" + modelFile);
+
+                if (!string.IsNullOrWhiteSpace(personHistorialDefinition))
+                {
+                    jsonContents = ModelParser.AddColumns(jsonContents, "PersonHistorical", personHistorialDefinition);
+                }
+
+                ModelParser parser = new ModelParser(jsonContents, storageAccountName, storageAccountKey, containerName, folderName);
+
+                string jsonAsDatabaseDefinition = parser.Parse();
+
+                Task.Run(() => DeployAASModel(jsonAsDatabaseDefinition, connectionString, asDatabase));
+
+                return new ActionResponse(ActionStatus.Success);
+            }
+            catch (Exception e)
+            {
+                request.Logger.LogException(e);
+                return new ActionResponse(ActionStatus.Failure, string.Empty, e, "ErroDeployingModel");
             }
 
-            ModelParser parser = new ModelParser(jsonContents, storageAccountName, storageAccountKey, containerName, folderName);
+        }
 
-            string jsonAsDatabaseDefinition = parser.Parse();
-
+        public async void DeployAASModel(string jsonModel, string connectionString, string asDatabase)
+        {
             Server server = null;
             try
             {
@@ -52,27 +68,24 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
                 Database db = server.Databases.FindByName(asDatabase);
                 db?.Drop();
 
-                var dbModel = JsonSerializer.DeserializeDatabase(jsonAsDatabaseDefinition);
+                db = JsonSerializer.DeserializeDatabase(jsonModel);
 
-                server.Databases.Add(dbModel);
+                server.Databases.Add(db);
 
-                dbModel.Model.RequestRefresh(AnalysisServices.Tabular.RefreshType.Full);
-                dbModel.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
+                db.Model.RequestRefresh(AnalysisServices.Tabular.RefreshType.Full);
+                db.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
+
                 
                 server.Disconnect(true);
-
-                return new ActionResponse(ActionStatus.Success);
             }
             catch (Exception e)
             {
-                request.Logger.LogException(e);
-                return new ActionResponse(ActionStatus.Failure, string.Empty, e, "ErroDeployingModel");
+                throw;
             }
             finally
             {
                 server?.Dispose();
             }
-
         }
     }
 }

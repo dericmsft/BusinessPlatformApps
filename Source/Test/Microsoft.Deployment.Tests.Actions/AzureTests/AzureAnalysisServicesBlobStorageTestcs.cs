@@ -51,14 +51,14 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
 
                 Assert.IsTrue(response.IsSuccess);
 
-                dataStore.AddToDataStore("blobUrl", "Model/modelDefinition.json");
+                dataStore.AddToDataStore("blobUrl", "https://exppltsa.blob.core.windows.net/rawdata/Model/modelDefinition.json");
                 dataStore.AddToDataStore("blobContentName", "asModelDefinition");
 
                 response = await TestManager.ExecuteActionAsync("Microsoft-GetASJsonBlob", dataStore);
 
                 Assert.IsTrue(response.IsSuccess);
 
-                dataStore.AddToDataStore("blobUrl", "Model/personHistoricalColumns.json");
+                dataStore.AddToDataStore("blobUrl", "https://exppltsa.blob.core.windows.net/rawdata/Model/personHistoricalColumns.json");
                 dataStore.AddToDataStore("blobContentName", "asPersonHistoricalDefinition");
 
                 response = await TestManager.ExecuteActionAsync("Microsoft-GetASJsonBlob", dataStore);
@@ -73,6 +73,62 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
                 dataStore.AddToDataStore("modelFilePath", "Service/AzureAS/modelDefinition.json");
 
                 response = await TestManager.ExecuteActionAsync("Microsoft-DeployAzureASModelBlobStorage", dataStore, "Microsoft-WorkplaceAnalytics");
+                Assert.IsTrue(response.IsSuccess);
+
+                response = await TestManager.ExecuteActionAsync("Microsoft-WaitForModelDeploymentStatus", dataStore, "Microsoft-WorkplaceAnalytics");
+                Assert.IsTrue(response.IsSuccess);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                throw;
+            }
+        }
+
+        [TestMethod]
+        public async Task DeployASModelOnFunction()
+        {
+            try
+            {
+
+                Dictionary<string, string> extraTokens = new Dictionary<string, string>();
+                extraTokens.Add("as", "AzureTokenAS"); // request AAS token 
+
+                // Deploy AS Model based of the following pramaters
+                var dataStore = await TestManager.GetDataStore(true, extraTokens);
+
+                dataStore.AddToDataStore("StorageAccountName", "exppltsa");
+                dataStore.AddToDataStore("StorageAccountType", "Standard_LRS");
+                dataStore.AddToDataStore("StorageAccountEncryptionEnabled", "true");
+                dataStore.AddToDataStore("SelectedResourceGroup", "voloas");
+                dataStore.AddToDataStore("StorageAccountContainer", "rawdata");
+
+                ActionResponse response = TestManager.ExecuteAction("Microsoft-GetStorageAccountKey", dataStore);
+
+                Assert.IsTrue(response.IsSuccess);
+
+                dataStore.AddToDataStore("blobUrl", "https://exppltsa.blob.core.windows.net/rawdata/Model/modelDefinition.json");
+                dataStore.AddToDataStore("blobContentName", "asModelDefinition");
+
+                response = await TestManager.ExecuteActionAsync("Microsoft-GetASJsonBlob", dataStore);
+
+                Assert.IsTrue(response.IsSuccess);
+
+                dataStore.AddToDataStore("blobUrl", "https://exppltsa.blob.core.windows.net/rawdata/Model/personHistoricalColumns.json");
+                dataStore.AddToDataStore("blobContentName", "asPersonHistoricalDefinition");
+
+                response = await TestManager.ExecuteActionAsync("Microsoft-GetASJsonBlob", dataStore);
+
+                Assert.IsTrue(response.IsSuccess);
+
+                dataStore.AddToDataStore("ASServerName", "wpads");
+                dataStore.AddToDataStore("ASServerUrl", "asazure://westus2.asazure.windows.net/wpads");
+                dataStore.AddToDataStore("ASLocation", "westus2");
+                dataStore.AddToDataStore("ASDatabase", "SemanticModel1");
+
+                dataStore.AddToDataStore("modelFilePath", "Service/AzureAS/modelDefinition.json");
+
+                response = await TestManager.ExecuteActionAsync("Microsoft-ExecuteAzureFunction", dataStore, "Microsoft-WorkplaceAnalytics");
                 Assert.IsTrue(response.IsSuccess);
             }
             catch (Exception ex)

@@ -86,6 +86,12 @@
         }
       },
       {
+        "displayname": "Keyline App Service Deployment",
+        "name": "$SiteCommon$/pages-gallery/azure-website.html",
+        "subtitle": "Keyline App Service Deployment",
+        "title": "Keyline App Service"
+      },
+      {
         "datastoreEntriesToValidate": [
           "AzureToken" //,
           //"SqlConnectionString"
@@ -124,10 +130,16 @@
       },
       {
         "DeploymentName": "ASFunction",
+        "displayname": "$translate(INIT_ACTION_WAITING_AS_SCHEDULER)",
+        "name": "Microsoft-WaitForModelDeploymentStatus",
+        "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )"
+      },
+      {
+        "DeploymentName": "ASFunction",
         "displayname": "$translate(INIT_ACTION_DEPLOYING_AS_SCHEDULER)",
         "FunctionName": "$save('asscheduler' + this.MS.DataStore.getValue('uniqueId'))",
         "name": "Microsoft-DeployAzureFunction",
-        "RepoUrl": "https://github.com/MohaaliMicrosoft/AnalysisServicesRefresh",
+        "RepoUrl": "https://github.com/dericmsft/AnalysisServicesRefresh",
         "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )",
         "sku": "Standard"
       },
@@ -147,6 +159,7 @@
         "name": "Microsoft-AssignPermissionsForUser",
         "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )",
         "UserToAdd": "$ds(SPNUser)",
+        "ASServerUrl": "$ds(ASServerUrl)",
         "ASDatabase": "SemanticModel"
       },
       {
@@ -167,7 +180,19 @@
         "name": "Microsoft-DeployAzureFunctionConnectionStrings",
         "skip": "$run(this.MS.DataStore.getValue('ssasDisabled') )"
       },
-
+      {
+        "DeploymentName": "WebAppDeployment",
+        "RepoUrl": "https://github.com/v-preben/Demo.git",
+        "siteName": "$run( this.MS.DataStore.getValue('siteName') )"
+      },
+      //{
+      //  "ASDatabase": "SemanticModel",
+      //  "displayname": "$translate(INIT_ACTION_DEPLOYING_AS_MODEL)",
+      //  "name": "Microsoft-DeployAzureASModelBlobStorage",
+      //  "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )",
+      //  //"SqlConnectionString": "$dsall(SqlConnectionString)[0]",
+      //  "modelFilePath": "Service/AzureAS/modelDefinition.json"
+      //},
       // Finish AS Deployment
       {
         "DeploymentName": "Function",
