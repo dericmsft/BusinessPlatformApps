@@ -130,12 +130,6 @@
       },
       {
         "DeploymentName": "ASFunction",
-        "displayname": "$translate(INIT_ACTION_WAITING_AS_SCHEDULER)",
-        "name": "Microsoft-WaitForModelDeploymentStatus",
-        "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )"
-      },
-      {
-        "DeploymentName": "ASFunction",
         "displayname": "$translate(INIT_ACTION_DEPLOYING_AS_SCHEDULER)",
         "FunctionName": "$save('asscheduler' + this.MS.DataStore.getValue('uniqueId'))",
         "name": "Microsoft-DeployAzureFunction",
@@ -181,8 +175,9 @@
         "skip": "$run(this.MS.DataStore.getValue('ssasDisabled') )"
       },
       {
-        "DeploymentName": "WebAppDeployment",
+        "DeploymentName": "ASFunction",
         "RepoUrl": "https://github.com/v-preben/Demo.git",
+        "name": "Microsoft-DeployAzureWebApp",
         "siteName": "$run( this.MS.DataStore.getValue('siteName') )"
       },
       //{
