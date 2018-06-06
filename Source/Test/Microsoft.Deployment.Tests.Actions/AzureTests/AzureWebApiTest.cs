@@ -9,22 +9,21 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Microsoft.Deployment.Tests.Actions.AzureTests
 {
     [TestClass]
-    public class AzureWebAppTest
+    public class AzureWebApiTest
     {
         [TestMethod]
-        public async Task CreateAzureWebApp()
+        public async Task CreateAzureWebApi()
         {
             var dataStore = await TestManager.GetDataStore();
 
             //// Deploy Function
-            dataStore.AddToDataStore("DeploymentName", "WebAppDeploymentTest3");
-            dataStore.AddToDataStore("siteName", "KeyLinesTestSite5");
+            dataStore.AddToDataStore("DeploymentName", "WebApiDeploymentTest1");
+            dataStore.AddToDataStore("siteName", "KeyLinesTestApi1");
             dataStore.AddToDataStore("RepoUrl", "https://github.com/v-preben/Demo.git");
             dataStore.AddToDataStore("Branch", "Test");
-            dataStore.AddToDataStore("Project", "KeyLinesDemo2/KeyLinesDemo2.csproj");
-            dataStore.AddToDataStore("ArmTemplate", "AzureWebApp");
-            dataStore.AddToDataStore("IsApi", "false"); // code can be removed if this is included in the app settings script
-            dataStore.AddToDataStore("HostName", "keylinestestapi1.azurewebsites.net");
+            dataStore.AddToDataStore("Project", "WpASolutions.AnalyticsServiceAdapter/WpASolutions.AnalyticsServiceAdapter.csproj");
+            dataStore.AddToDataStore("ArmTemplate", "AzureWebApi");
+            dataStore.AddToDataStore("IsApi", "true"); // code can be removed if this is included in the app settings script
 
             var response = TestManager.ExecuteAction("Microsoft-DeployAzureWebApp", dataStore);
             Assert.IsTrue(response.IsSuccess);
@@ -32,11 +31,12 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
             Assert.IsTrue(response.IsSuccess);
         }
 
+
         [TestMethod]
-        public async Task CheckAppNameAvailability()
+        public async Task CheckApiNameAvailability()
         {
             var dataStore = await TestManager.GetDataStore();
-            dataStore.AddToDataStore("siteName", "KeyLinesTestSite99");
+            dataStore.AddToDataStore("siteName", "keylinestestapi3");
             var response = await TestManager.ExecuteActionAsync("Microsoft-CheckAppServiceNameAvailability", dataStore);
             Assert.IsFalse(response.IsSuccess);
         }

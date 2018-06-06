@@ -23,31 +23,18 @@ namespace Microsoft.Deployment.Actions.AzureCustom.Common
         {
             var azureToken = request.DataStore.GetJson("AzureToken", "access_token");
             var subscription = request.DataStore.GetJson("SelectedSubscription", "SubscriptionId");
-            var resourceGroup = request.DataStore.GetValue("SelectedResourceGroup");
-
+            var resourceGroup = request.DataStore.GetValue("SelectedResourceGroup");            
             var deploymentName = request.DataStore.GetValue("DeploymentName");
+            var isApi = request.DataStore.GetValue("IsApi"); //code can be removed if this is included in the app settings script
             var name = request.DataStore.GetValue("siteName");
-            //var hostingPlanName = request.DataStore.GetValue("hostingPlanName") ?? "apphostingplan";
-            
-            var sku = "S1";
-            var workerSize = "1";
-            var repoURL = "https://github.com/v-preben/Demo.git";
-            var branch = "Test";
+            var repoURL = request.DataStore.GetValue("RepoURL");
+            var branch = request.DataStore.GetValue("Branch");
+            var project = request.DataStore.GetValue("Project");
+            var armTemplateName = request.DataStore.GetValue("ArmTemplate");                        
             var location = "[resourceGroup().location]";
+            var hostName = isApi == "true" ? "" : request.DataStore.GetValue("HostName"); //code can be removed if this is included in the app settings script
 
-            //var hostingEnvironment = request.DataStore.GetValue("hostingEnvironment") ?? string.Empty;
-            //var sku = request.DataStore.GetValue("sku") ?? "S1";
-            //var skuCode = request.DataStore.GetValue("skuCode") ?? "S1";
-            //var workerSize = request.DataStore.GetValue("workerSize") ?? "0";
-            //var branch = request.DataStore.GetValue("branch") ?? "master";
-            /*var projectPath = request.DataStore.GetValue("ProjectPath") ?? string.Empty; Commented out until we find a way to hasten deployments -we will bring back functions to the same repo then */
-
-
-            //string functionArmDeploymentRelativePath = sku.ToLower() == "standard"
-            //     ? "Service/Arm/AzureFunctionsStaticAppPlan.json"
-            //     : "Service/Arm/AzureFunctions.json";
-            string webAppArmDeploymentRelativePath = "Service/Arm/AzureWebApp.json";
-
+            string webAppArmDeploymentRelativePath = "Service/Arm/" + armTemplateName +".json";
             string storageAccountName = "solutiontemplate" + Path.GetRandomFileName().Replace(".", "").Substring(0, 8);
 
             var param = new AzureArmParameterGenerator();
@@ -55,18 +42,15 @@ namespace Microsoft.Deployment.Actions.AzureCustom.Common
             param.AddStringParam("subscription", subscription);
             param.AddStringParam("siteName", name);
             param.AddStringParam("hostingPlanName", name);
-            param.AddStringParam("sku", sku);
-            param.AddStringParam("workerSize", workerSize);
+            param.AddStringParam("project", project);
+            if (isApi != "true") // code can be removed if this is included in the app settings script
+            {
+                param.AddStringParam("hostName", hostName);
+            }
             param.AddStringParam("repoURL", repoURL);
             param.AddStringParam("branch", branch);
             param.AddStringParam("location", location);
-            //param.AddStringParam("hostingEnvironment", hostingEnvironment);
-            //param.AddStringParam("sku", sku);
-            //param.AddStringParam("skuCode", skuCode);
-            //param.AddStringParam("workerSize", workerSize);
-            //param.AddStringParam("branch", branch);
-            /*param.AddStringParam("projectPath", projectPath); Commented out until we find a way to hasten deployments - we will bring back functions to the same repo then*/
-
+                        
             var armTemplate = JsonUtility.GetJObjectFromJsonString(System.IO.File.ReadAllText(Path.Combine(request.ControllerModel.SiteCommonFilePath, webAppArmDeploymentRelativePath)));
             var armParamTemplate = JsonUtility.GetJObjectFromObject(param.GetDynamicObject());
             armTemplate.Remove("parameters");
@@ -100,11 +84,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.Common
 
             //Log function
             request.Logger.LogResource(request.DataStore, name,
-                DeployedResourceType.Function, CreatedBy.BPST, DateTime.UtcNow.ToString("o"), string.Empty, name);
-
-            //Log storage account
-            request.Logger.LogResource(request.DataStore, storageAccountName,
-                DeployedResourceType.StorageAccount, CreatedBy.BPST, DateTime.UtcNow.ToString("o"));
+                DeployedResourceType.AppService, CreatedBy.BPST, DateTime.UtcNow.ToString("o"), string.Empty, name);
 
             return new ActionResponse(ActionStatus.Success, deploymentItem);
         }

@@ -38,8 +38,7 @@
             "displayName": "WebAppSettings"
           },
           "properties": {
-            "project": "[parameters('project')]",
-            "wpaDataAdapterHostName" :  "[parameters('hostName')]"
+            "project": "[parameters('project')]"
           }
         },
         {
@@ -72,9 +71,6 @@
       "type": "String"
     },
     "project": {
-      "type": "String"
-    },
-    "hostName": {
       "type": "String"
     },
     "repoURL": {
