@@ -156,6 +156,7 @@
   <ItemGroup>
     <Compile Include="APIManagementTests\APIManagementTests.cs" />
     <Compile Include="AzureTests\AzureAnalysisServicesBlobStorageTestcs.cs" />
+    <Compile Include="AzureTests\AzureWebApiTest.cs" />
     <Compile Include="AzureTests\AzureWebAppTest.cs" />
     <Compile Include="AzureTests\HistoricalActivityLogTest.cs" />
     <Compile Include="AzureTests\GetAppWorkspacesTest.cs" />
