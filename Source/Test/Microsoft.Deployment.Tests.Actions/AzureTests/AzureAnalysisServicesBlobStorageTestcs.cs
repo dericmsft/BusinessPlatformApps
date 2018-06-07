@@ -213,5 +213,44 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
             Assert.IsTrue(response.IsSuccess);
         }
 
+        [TestMethod]
+        public async Task WaitForModelTest()
+        {
+            try
+            {
+
+                Dictionary<string, string> extraTokens = new Dictionary<string, string>();
+                extraTokens.Add("as", "AzureTokenAS"); // request AAS token 
+
+                // Deploy AS Model based of the following pramaters
+                var dataStore = await TestManager.GetDataStore(true, extraTokens);
+
+                dataStore.AddToDataStore("StorageAccountName", "exppltsa");
+                dataStore.AddToDataStore("StorageAccountType", "Standard_LRS");
+                dataStore.AddToDataStore("StorageAccountEncryptionEnabled", "true");
+                dataStore.AddToDataStore("SelectedResourceGroup", "voloas");
+                dataStore.AddToDataStore("StorageAccountContainer", "rawdata");
+
+                ActionResponse response = TestManager.ExecuteAction("Microsoft-GetStorageAccountKey", dataStore);
+
+                Assert.IsTrue(response.IsSuccess);
+
+                dataStore.AddToDataStore("ASServerName", "vfrortest20");
+                dataStore.AddToDataStore("ASServerUrl", "asazure://westus.asazure.windows.net/vfrortest20");
+                dataStore.AddToDataStore("ASLocation", "westus");
+                dataStore.AddToDataStore("ASDatabase", "SemanticModel");
+
+                dataStore.AddToDataStore("modelFilePath", "Service/AzureAS/modelDefinition.json");
+
+                response = await TestManager.ExecuteActionAsync("Microsoft-WaitForModelDeploymentStatus", dataStore, "Microsoft-WorkplaceAnalytics");
+                Assert.IsTrue(response.IsSuccess);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                throw;
+            }
+        }
+
     }
 }

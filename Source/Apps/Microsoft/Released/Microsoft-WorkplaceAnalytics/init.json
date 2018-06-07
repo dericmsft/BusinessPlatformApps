@@ -73,6 +73,12 @@
         "skip": "$run(this.MS.DataStore.getValue('ssasDisabled'))"
       },
       {
+        "displayname": "Keyline App Service",
+        "name": "$SiteCommon$/pages-gallery/azure-website.html",
+        "subtitle": "Keyline App Service",
+        "title": "Keyline App Service"
+      },
+      {
         "displayCompletionNotification": false,
         "displayname": "Summary",
         "name": "$SiteCommon$/pages-gallery/summary.html",
@@ -84,12 +90,6 @@
           "Target Database": "$(this.MS.DataStore.getValue('Database'))",
           "Target Username": "$(this.MS.DataStore.getValue('Username'))"
         }
-      },
-      {
-        "displayname": "Keyline App Service Deployment",
-        "name": "$SiteCommon$/pages-gallery/azure-website.html",
-        "subtitle": "Keyline App Service Deployment",
-        "title": "Keyline App Service"
       },
       {
         "datastoreEntriesToValidate": [
@@ -127,6 +127,13 @@
         "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )",
         //"SqlConnectionString": "$dsall(SqlConnectionString)[0]",
         "modelFilePath": "Service/AzureAS/modelDefinition.json"
+      },
+      {
+        "DeploymentName": "ASFunction",
+        "displayname": "Waiting for model deployment",
+        "ASDatabase": "SemanticModel",
+        "name": "Microsoft-WaitForModelDeploymentStatus",
+        "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )"
       },
       {
         "DeploymentName": "ASFunction",
@@ -177,6 +184,7 @@
       {
         "DeploymentName": "ASFunction",
         "RepoUrl": "https://github.com/v-preben/Demo.git",
+        "displayname": "Waiting for Keyline Deployment",
         "name": "Microsoft-DeployAzureWebApp",
         "siteName": "$run( this.MS.DataStore.getValue('siteName') )"
       },
