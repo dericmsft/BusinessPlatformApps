@@ -28,14 +28,14 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureDatabricks
 
             var cluster = await client.Get(databricksClusterId);
 
-            if (cluster.State == Azure.Databricks.Model.ClusterState.ERROR)
-            {
-                return new ActionResponse(ActionStatus.Failure);
-            }
-
             if (cluster.State == Azure.Databricks.Model.ClusterState.RUNNING)
             {
                 return new ActionResponse(ActionStatus.Success);
+            }
+
+            if (cluster.State == Azure.Databricks.Model.ClusterState.ERROR)
+            {
+                return new ActionResponse(ActionStatus.Failure);
             }
 
             if (cluster.State != Azure.Databricks.Model.ClusterState.RUNNING)

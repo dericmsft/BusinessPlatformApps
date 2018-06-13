@@ -49,16 +49,30 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
             //dataStore.AddToDataStore("SelectedLocation", "{Name: westus2}", DataStoreType.Public);
             dataStore.AddToDataStore("SelectedResourceGroup", "vmishel0604rg");
             dataStore.AddToDataStore("StorageAccountContainer", "demobigdata");
-            dataStore.AddToDataStore("DatabricksClusterId", "0522-000313-swirl254");
+            
+            dataStore.AddToDataStore("DatabricksClusterName", "FranciscoTestCluser1");
+            //var databricksClusterName = request.DataStore.GetValue("DatabricksClusterName");
 
             ActionResponse response = TestManager.ExecuteAction("Microsoft-GetStorageAccountKey", dataStore);
 
             Assert.IsTrue(response.IsSuccess);
 
-            //response = await TestManager.ExecuteActionAsync("Microsoft-DeployAzureDatabricksCluster", dataStore);
+            response = await TestManager.ExecuteActionAsync("Microsoft-DeployAzureDatabricksCluster", dataStore);
 
-            //response = await TestManager.ExecuteActionAsync("Microsoft-WaitForClusterDeploymentStatus", dataStore);
+            Assert.IsTrue(response.IsSuccess);
 
+            //dataStore.AddToDataStore("DatabricksClusterId", "0613-010942-femur361");
+
+            while (true)
+            {
+                response = await TestManager.ExecuteActionAsync("Microsoft-WaitForClusterDeploymentStatus", dataStore);
+                if (response.Status == ActionStatus.Success)
+                {
+                    break;
+                }
+            }
+
+            Assert.IsTrue(response.IsSuccess);
 
             dataStore.AddToDataStore("blobUrl", "https://vmishel0604sa.blob.core.windows.net/demobigdata/Model/CreateInteractionsTest.py");
             dataStore.AddToDataStore("blobContentName", "NotebookContent");

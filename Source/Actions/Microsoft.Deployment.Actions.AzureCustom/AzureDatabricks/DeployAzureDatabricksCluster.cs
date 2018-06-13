@@ -16,7 +16,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureDatabricks
         public override async Task<ActionResponse> ExecuteActionAsync(ActionRequest request)
         {
 
-            var selectedLocation = request.DataStore.GetValue("SelectedLocation", "Name");
+            var selectedLocation = request.DataStore.GetJson("SelectedLocation", "Name");
             var azureTokenDatabricks = request.DataStore.GetValue("AzureTokenDatabricks");
             var databricksClusterName = request.DataStore.GetValue("DatabricksClusterName");
 
