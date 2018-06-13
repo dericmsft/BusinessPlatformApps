@@ -44,6 +44,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
 
                 string jsonAsDatabaseDefinition = parser.Parse();
 
+                //DeployAASModel(jsonAsDatabaseDefinition, connectionString, asDatabase);
                 Task.Run(() => DeployAASModel(jsonAsDatabaseDefinition, connectionString, asDatabase));
 
                 return new ActionResponse(ActionStatus.Success);

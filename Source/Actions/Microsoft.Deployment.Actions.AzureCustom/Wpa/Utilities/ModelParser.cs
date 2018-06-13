@@ -26,8 +26,14 @@ namespace Microsoft.Deployment.Actions.AzureCustom.Wpa.Utilities
 
         public string Parse()
         {
-            string folderNameWithSlash = folderName + "/";
-            string folderNameWithPrefixAndSlash = "_" + folderNameWithSlash;
+            string folderNameWithSlash = string.Empty;
+            string folderNameWithPrefixAndSlash = "_";
+
+            if (!string.IsNullOrWhiteSpace(folderName))
+            {
+                folderNameWithSlash = folderName + "/";
+                folderNameWithPrefixAndSlash = "_" + folderNameWithSlash;
+            }
 
             modelString = modelString.Replace("__storageAccountName__", storageAccountName);
             modelString = modelString.Replace("********", authenticationKey);
@@ -76,15 +82,15 @@ namespace Microsoft.Deployment.Actions.AzureCustom.Wpa.Utilities
             b.Append("    __containername__1 = Source{[Name=\"");
             b.Append("__containername__");
             b.Append("\"]}[Data],\n");
-            b.Append("    #\"https://__storageAccountName__ blob core windows net/__containername__/___tableName__ csv\" = __containername__1{[#\"Folder Path\"");
+            b.Append("    #\"https://__storageAccountName__ blob core windows net/__containername__/__folderNameWithPrefixAndSlash____tableName__ csv\" = __containername__1{[#\"Folder Path\"");
             b.Append("=\"https://");
             b.Append("__storageAccountName__");
             b.Append(".blob.core.windows.net/");
             b.Append("__containername__");
             b.Append("/\",Name=\"");
-            b.Append("__tableName__.csv");
+            b.Append("__folderNameWithSlash____tableName__.csv");
             b.Append("\"]}[Content],\n");
-            b.Append("    #\"Imported CSV\" = Csv.Document(#\"https://__storageAccountName__ blob core windows net/__containername__/___tableName__ csv\",[Delimiter=\",\", Columns=19, Encoding=1252, QuoteStyle=QuoteStyle.None]),\n");
+            b.Append("    #\"Imported CSV\" = Csv.Document(#\"https://__storageAccountName__ blob core windows net/__containername__/__folderNameWithPrefixAndSlash____tableName__ csv\",[Delimiter=\",\", Columns=19, Encoding=1252, QuoteStyle=QuoteStyle.None]),\n");
             b.Append("    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Imported CSV\", [PromoteAllScalars=true]),\n");
             b.Append("    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{");
             b.Append(GetTablePowerQuerySchema(columns));
