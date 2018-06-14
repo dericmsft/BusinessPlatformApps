@@ -265,6 +265,7 @@
     <Compile Include="Common\DeployNotifierLogicApp.cs" />
     <Compile Include="Common\GetEmail.cs" />
     <Compile Include="Common\VerifyConnectionToLogicApp.cs" />
+    <Compile Include="AzureKeyVault\DeployKeyVault.cs" />
     <Compile Include="EventHub\GetEventHubKeys.cs" />
     <Compile Include="Functions\CheckFunctionStatus.cs" />
     <Compile Include="Functions\DeployAzureFunctionConnectionStrings.cs" />
