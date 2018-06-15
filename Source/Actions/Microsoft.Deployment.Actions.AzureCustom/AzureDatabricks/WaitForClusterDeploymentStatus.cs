@@ -33,7 +33,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureDatabricks
                 return new ActionResponse(ActionStatus.Success);
             }
 
-            if (cluster.State == Azure.Databricks.Model.ClusterState.ERROR)
+            if (cluster.State == Azure.Databricks.Model.ClusterState.ERROR || cluster.State == Azure.Databricks.Model.ClusterState.TERMINATED)
             {
                 return new ActionResponse(ActionStatus.Failure);
             }

@@ -722,5 +722,7 @@
     INIT_LITHIUM_PRICING_URL: `https://github.com/Microsoft/BusinessPlatformApps/blob/dev/Source/Apps/Partner/Released/iTalent-SocialAnalyticsByLithium/Readme.md#estimated-costs`,
     ITALENT_COMP_NAME: `iTalent Digital, Inc.`,
     INIT_ACTION_RESTART_AZURE_FUNCTION: `Restarting function`,
-    INIT_ACTION_CHECK_AZURE_FUNCTION_RUNNING_STATUS: 'Checking azure function running status'
+    INIT_ACTION_CHECK_AZURE_FUNCTION_RUNNING_STATUS: 'Checking azure function running status',
+    DATABRICKS_WORKSPACE_NAME: 'Workspace Name: ',
+    DATABRICKS_CLUSTER_NAME: 'Cluster Name: '
 };

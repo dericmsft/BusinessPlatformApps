@@ -20,7 +20,7 @@
         public const string AzureKeyVaultApi = "https://vault.azure.net"; // Do not add a trailing slash
         public const string AzureWebSite = ".scm.azurewebsites.net/";
         public const string PowerBIService = "https://analysis.windows.net/PowerBI/api";
-        public const string DatabricksService = "https://westus2.azuredatabricks.net/aad";
+        public const string DatabricksService = "https://westus.azuredatabricks.net/aad/auth?hash=";
 
         public const string AzureAuthUri = "https://login.microsoftonline.com/{0}/oauth2/authorize?";
         public const string AzureTokenUri = "https://login.microsoftonline.com/{0}/oauth2/token";
@@ -29,7 +29,7 @@
         //public const string ASClientId = "ecbb98ca-18e7-4f63-bb90-4534267a71b7";
         public const string MicrosoftClientId = "541d0e0b-6940-4cd9-a31c-aa06e862511a";
         public const string ASClientId = "19ad5c88-bd3e-49e4-a829-de68d1a18ab1";
-        public const string DatabricksClientId = "00c5968a-4090-4e57-b268-8f9e71eaf078";
+        //public const string DatabricksClientId = "00c5968a-4090-4e57-b268-8f9e71eaf078";
 
         public const string MicrosoftClientIdCrm = "affab8de-076f-4b2c-b62d-29860cb41ff8";
         public const string MicrosoftClientIdPowerBI = "728cc6b6-9854-4601-a95a-152077d65d58";

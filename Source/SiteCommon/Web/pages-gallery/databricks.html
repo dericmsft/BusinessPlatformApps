@@ -1,0 +1,18 @@
+﻿<template>
+    <h1 class="st-title">${title}</h1>
+    <p class="st-subtitle">${subtitle}</p>
+
+    <div class="st-float">
+        <p class="st-text">${MS.Translate.DATABRICKS_WORKSPACE_NAME}</p>
+        <input class="st-input" type="text" change.delegate="onInvalidate()" disabled.bind="MS.HttpService.isServiceBusy" value.bind="databricksWorkspaceName" />
+        <p class="st-text">${MS.Translate.DATABRICKS_CLUSTER_NAME}</p>
+        <input class="st-input" type="text" change.delegate="onInvalidate()" disabled.bind="MS.HttpService.isServiceBusy" value.bind="databricksClusterName" />
+    </div>
+
+    <!--Validate button-->
+    <p class="st-float">
+        <button class="primary" click.trigger="onValidate()" if.bind="!MS.HttpService.isServiceBusy">${MS.Translate.COMMON_VALIDATE}</button>
+    </p>
+    <!--</div>-->
+
+</template>

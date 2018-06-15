@@ -20,10 +20,11 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureDatabricks
         {
 
             var selectedLocation = request.DataStore.GetJson("SelectedLocation", "Name");
-            var azureTokenDatabricks = request.DataStore.GetJson("AzureTokenDatabricks");
+            var azureTokenDatabricks = request.DataStore.GetValue("AzureTokenDatabricks");
+            //var azureTokenDatabricks = request.DataStore.GetJson("AzureToken", "access_token");
             string notebookPath = request.DataStore.GetValue("NotebookPath");
 
-            WorkspaceService service = new WorkspaceService(selectedLocation, azureTokenDatabricks.ToString());
+            WorkspaceService service = new WorkspaceService(selectedLocation, azureTokenDatabricks);
 
             NotebookImport notebookImport = new NotebookImport();
             notebookImport.Path = "/Shared/InteractionsNotebook_API_Test1";

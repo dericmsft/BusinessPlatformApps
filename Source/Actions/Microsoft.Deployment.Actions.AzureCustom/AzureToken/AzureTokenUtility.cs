@@ -123,6 +123,10 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureToken
                     resource = Constants.AzureManagementCoreApi;
                     clientId = Constants.Office365ClientId;
                     break;
+                case "databricks":
+                    resource = Constants.DatabricksService;
+                    clientId = Constants.MicrosoftClientId;
+                    break;
             }
 
             return new AzureTokenRequestMeta(resource, clientId);

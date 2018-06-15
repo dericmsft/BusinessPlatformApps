@@ -29,6 +29,32 @@ namespace Microsoft.Azure.Databricks.Workspace
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             client.BaseAddress = new Uri($"https://{location}.azuredatabricks.net/api/");
         }
+
+        public async Task<bool> WorkspaceExists()
+        {
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get, "2.0/token/list");
+
+                var response = client.GetAsync("2.0/workspace/list?path=/Shared/ ").Result;
+
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         public async Task<bool> NotebookImport(NotebookImport import)
         {
             try

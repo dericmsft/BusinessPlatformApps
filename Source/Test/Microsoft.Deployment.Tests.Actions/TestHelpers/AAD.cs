@@ -18,23 +18,42 @@ namespace Microsoft.Deployment.Tests.Actions.TestHelpers
         public static async Task<DataStore> GetUserTokenFromPopup(string openAuthorizationType = "")
         {
 #if DEBUG
-            AuthenticationContext context = new AuthenticationContext("https://login.windows.net/" + "common");
-            AzureTokenRequestMeta meta = AzureTokenUtility.GetMetaFromOAuthType(openAuthorizationType);
+            AuthenticationContext context;
 
-            var url = context.GetAuthorizationRequestUrlAsync(meta.Resource, meta.ClientId, new Uri("http://localhost:1503/redirect.html"), UserIdentifier.AnyUser, "prompt=consent").Result;
-            WindowsFormsWebAuthenticationDialog form = new WindowsFormsWebAuthenticationDialog(null);
-            form.WebBrowser.Navigated += delegate (object sender, WebBrowserNavigatedEventArgs args)
+
+            try
             {
-                if (args.Url.ToString().StartsWith("http://localhost:1503/redirect.html"))
+                if(openAuthorizationType == "databricks")
                 {
-                    string tempcode = args.Url.ToString();
-                    tempcode = tempcode.Substring(tempcode.IndexOf("code=") + 5);
-                    code = tempcode.Substring(0, tempcode.IndexOf("&"));
-                    form.Close();
+                    context = new AuthenticationContext("https://westus.azuredatabricks.net/login.html");
+                }
+                else
+                {
+                    context = new AuthenticationContext("https://login.windows.net/" + "common");
+                }
+                
+
+                AzureTokenRequestMeta meta = AzureTokenUtility.GetMetaFromOAuthType(openAuthorizationType);
+                var url = context.GetAuthorizationRequestUrlAsync(meta.Resource, meta.ClientId, new Uri("http://localhost:1503/redirect.html"), UserIdentifier.AnyUser, "prompt=consent").Result;
+                WindowsFormsWebAuthenticationDialog form = new WindowsFormsWebAuthenticationDialog(null);
+                form.WebBrowser.Navigated += delegate (object sender, WebBrowserNavigatedEventArgs args)
+                {
+                    if (args.Url.ToString().StartsWith("http://localhost:1503/redirect.html"))
+                    {
+                        string tempcode = args.Url.ToString();
+                        tempcode = tempcode.Substring(tempcode.IndexOf("code=") + 5);
+                        code = tempcode.Substring(0, tempcode.IndexOf("&"));
+                        form.Close();
+                    };
                 };
-            };
-            form.WebBrowser.Navigate(url);
-            form.ShowBrowser();
+                form.WebBrowser.Navigate(url);
+                form.ShowBrowser();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
 
             while (string.IsNullOrEmpty(code))
             {

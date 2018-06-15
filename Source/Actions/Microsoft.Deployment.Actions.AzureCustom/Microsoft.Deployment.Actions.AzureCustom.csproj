@@ -224,6 +224,10 @@
     <Compile Include="AzureAS\DeployAzureASModel.cs" />
     <Compile Include="AzureAS\CheckASServerNameAvailability.cs" />
     <Compile Include="AzureAS\ValidateConnectionToAS.cs" />
+    <Compile Include="AzureDatabricks\CheckDatabricksWorkspaceAvailability.cs" />
+    <Compile Include="AzureDatabricks\DeplyAzureDatabricksWorkspace.cs" />
+    <Compile Include="AzureDatabricks\GetDatabricksAuthUri.cs" />
+    <Compile Include="AzureDatabricks\CheckDatabricksWorkspaceExists.cs" />
     <Compile Include="AzureDatabricks\WaitForAzureDatabricksRunStatus.cs" />
     <Compile Include="AzureDatabricks\DeployAzureDatabricksCluster.cs" />
     <Compile Include="AzureDatabricks\ImportAzureDatabricksNotebook.cs" />

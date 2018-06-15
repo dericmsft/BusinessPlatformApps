@@ -54,7 +54,9 @@
     <Compile Include="Model\NotebookImport.cs" />
     <Compile Include="Model\RunResultState.cs" />
     <Compile Include="Model\RunState.cs" />
+    <Compile Include="Model\Token.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tokens\TokenService.cs" />
     <Compile Include="Utility\StringUtils.cs" />
     <Compile Include="Workspace\WorkspaceService.cs" />
   </ItemGroup>
