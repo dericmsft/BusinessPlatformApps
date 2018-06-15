@@ -226,10 +226,39 @@
       {
         "DeploymentName": "ASFunction",
         "RepoUrl": "https://github.com/v-preben/Demo.git",
-        "displayname": "Waiting for Keyline Deployment",
+        "displayname": "Waiting for Keyline API Deployment",
         "name": "Microsoft-DeployAzureWebApp",
-        "siteName": "$run( this.MS.DataStore.getValue('siteName') )"
+        "siteName": "$run( this.MS.DataStore.getValue('siteName') )",
+        "IsApi": "true",
+        "Project": "WpASolutions.AnalyticsServiceAdapter/WpASolutions.AnalyticsServiceAdapter.csproj",
+        "ArmTemplateName": "AzureWebApi",
+        "branch": "master",
+        "ASServerUrl": "$run( this.MS.DataStore.getValue('ASServerUrl') )",
+        //"ASDatabase": "$run( this.MS.DataStore.getValue('ASDatabase') )",
+        "InitialCatalog": "SemanticModel",
+        "SPNAppId": "$run( this.MS.DataStore.getValue('SPNAppId') )",
+        "tenantId": "$run( this.MS.DataStore.getValue('SPNTenantId') )",
+        "SPNKey": "$run( this.MS.DataStore.getValue('SPNKey') )"
       },
+      {
+        "DeploymentName": "ASFunction2",
+        "RepoUrl": "https://github.com/v-preben/Demo.git",
+        "displayname": "Waiting for Keyline Web UI",
+        "name": "Microsoft-DeployAzureWebApp",
+        "siteName": "$run( this.MS.DataStore.getValue('siteName') )",
+        "IsApi": "false",
+        "Project": "KeyLinesDemo2/KeyLinesDemo2.csproj",
+        "ArmTemplateName": "AzureWebApp",
+        "branch": "master",
+        "SPNAppId": "$run( this.MS.DataStore.getValue('SPNAppId') )",
+        "tenantId": "$run( this.MS.DataStore.getValue('SPNTenantId') )"
+      },
+      //{
+      //  "DeploymentName": "KeyVault",
+      //  //"RepoUrl": "https://github.com/v-preben/Demo.git",
+      //  "name": "Microsoft-DeployKeyVault" //,
+      //  //"siteName": "$run( this.MS.DataStore.getValue('siteName') )"
+      //},
       //{
       //  "ASDatabase": "SemanticModel",
       //  "displayname": "$translate(INIT_ACTION_DEPLOYING_AS_MODEL)",

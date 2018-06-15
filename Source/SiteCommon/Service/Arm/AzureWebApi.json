@@ -38,7 +38,12 @@
             "displayName": "WebAppSettings"
           },
           "properties": {
-            "project": "[parameters('project')]"
+            "project": "[parameters('project')]",
+            "SPNKey": "[parameters('SPNKey')]",
+            "tenantId": "[parameters('tenantId')]",
+            "SPNAppId": "[parameters('SPNAppId')]",
+            "InitialCatalog": "[parameters('InitialCatalog')]",
+            "ASServerUrl": "[parameters('ASServerUrl')]"
           }
         },
         {
@@ -55,9 +60,26 @@
           }
         }
       ]
-    }
+    },
+    //{
+    //  "comments": "Generalized from resource: X",
+    //  "type": "Microsoft.Web/sites/config",
+    //  "name": "[concat(parameters('siteName'), '/', parameters('config_web_name'))]",
+    //  "apiVersion": "2016-08-01",
+    //  "location": "South Central US",
+    //  "tags": {},
+    //  "scale": null,
+    //  "properties": {
+    //    "customAppPoolIdentityAdminState": false,
+    //    "siteAuthEnabled": true,
+    //    "siteAuthSettings": {
+    //      "clientId": "[parameters('SPNAppId')]",
+    //      "issuer": "https://sts.windows.net/72f988bf-86f1-41af-91ab-2d7cd011db47/"
+    //    }
+    //  }
+    //}
   ],
-  "parameters": {
+    "parameters": {
     "resourcegroup": {
       "type": "String"
     },
@@ -82,6 +104,25 @@
     "location": {
       "type": "String",
       "defaultValue": "[resourceGroup().location]"
-    }
+    },
+    "SPNKey": {
+      "type": "String"
+    },
+    "tenantId": {
+      "type": "String"
+    },
+    "SPNAppId": {
+      "type": "String"
+    },
+    "InitialCatalog": {
+      "type": "String"
+    },
+    "ASServerUrl": {
+      "type": "String"
+    }//,
+    //"config_web_name": {
+    //  "defaultValue": "web",
+    //  "type": "String"
+    //}
   }
 }
