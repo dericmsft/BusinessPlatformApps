@@ -85,7 +85,7 @@ export class Azure extends ViewModelBase {
 
         let locationsResponse = await this.MS.HttpService.Execute('Microsoft-GetLocations', {});
         if (locationsResponse.isSuccess) {
-            this.MS.DataService.AddToDataStore('Azure', 'SelectedLocation', locationsResponse.response.value[5]);
+            this.MS.DataService.AddToDataStore('Azure', 'SelectedLocation', locationsResponse.response.value[23]);
         }
 
         let response = await this.MS.HttpService.Execute('Microsoft-CreateResourceGroup', {});

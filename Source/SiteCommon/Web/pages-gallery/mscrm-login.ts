@@ -96,7 +96,7 @@ export class MsCrmLogin extends AzureLogin {
 
                     let locationsResponse: ActionResponse = await this.MS.HttpService.executeAsync('Microsoft-GetLocations');
                     if (locationsResponse.IsSuccess) {
-                        this.MS.DataStore.addToDataStore('SelectedLocation', locationsResponse.Body.value[5], DataStoreType.Public);
+                        this.MS.DataStore.addToDataStore('SelectedLocation', locationsResponse.Body.value[23], DataStoreType.Public);
                     }
 
                     isSuccess = await this.MS.HttpService.isExecuteSuccessAsync('Microsoft-CreateResourceGroup');

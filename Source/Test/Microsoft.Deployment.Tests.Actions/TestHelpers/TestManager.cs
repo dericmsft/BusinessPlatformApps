@@ -73,11 +73,11 @@ namespace Microsoft.Deployment.Tests.Actions.TestHelpers
 
             var subscriptionResult = await TestManager.ExecuteActionAsync("Microsoft-GetAzureSubscriptions", dataStore);
             Assert.IsTrue(subscriptionResult.IsSuccess);
-            var subscriptionId = subscriptionResult.Body.GetJObject()["value"].SingleOrDefault(p => p["DisplayName"].ToString().StartsWith("VoloPPE"));
+            var subscriptionId = subscriptionResult.Body.GetJObject()["value"].SingleOrDefault(p => p["DisplayName"].ToString().StartsWith("WpADS-Stage"));
             dataStore.AddToDataStore("SelectedSubscription", subscriptionId, DataStoreType.Public);
 
             var locationResult = await TestManager.ExecuteActionAsync("Microsoft-GetLocations", dataStore);
-            var location = locationResult.Body.GetJObject()["value"][5];
+            var location = locationResult.Body.GetJObject()["value"][23];
             dataStore.AddToDataStore("SelectedLocation", location, DataStoreType.Public);
             dataStore.AddToDataStore("SelectedResourceGroup", ResourceGroup);
 

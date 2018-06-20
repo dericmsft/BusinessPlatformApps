@@ -24,7 +24,7 @@
         "azureProviders": [
           "Microsoft.AnalysisServices"
         ],
-        "defaultLocation": "5",
+        "defaultLocation": "23",
         "displayname": "Login to Azure",
         "name": "$SiteCommon$/pages-gallery/azure-login.html",
         "pricingCalculatorUrl": "$translate(INIT_WPA_PRICING_CALCULATOR_URL)",
