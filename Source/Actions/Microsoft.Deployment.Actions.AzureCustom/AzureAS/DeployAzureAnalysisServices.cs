@@ -25,7 +25,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
             string resourceGroup = request.DataStore.GetValue("SelectedResourceGroup");
 
             string serverName = request.DataStore.GetValue("ASServerName") ?? "analysisserver-" + RandomGenerator.GetRandomLowerCaseCharacters(5);
-            string location = request.DataStore.GetValue("ASLocation") ?? "westus";
+            string location = request.DataStore.GetValue("ASLocation") ?? "westus2";
             string sku = request.DataStore.GetValue("ASSku") ?? "B1";
             string admin = AzureUtility.GetEmailFromToken(request.DataStore.GetJson("AzureToken"));
 
@@ -56,6 +56,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
 
             JObject responseObj = JsonUtility.GetJObjectFromJsonString(responseBody);
             request.DataStore.AddToDataStore("ASServerUrl", responseObj["properties"]["serverFullName"], DataStoreType.Public);
+			request.DataStore.AddToDataStore("ASServerName", serverName, DataStoreType.Public);
 
             request.Logger.LogResource(request.DataStore, responseObj["properties"]["serverFullName"].ToString(),
                 DeployedResourceType.AzureAnalysisServices, CreatedBy.BPST, DateTime.UtcNow.ToString("o"), string.Empty, sku);

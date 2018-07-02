@@ -21,65 +21,32 @@ namespace Microsoft.Deployment.Actions.AzureCustom.Common
     {
         public override async Task<ActionResponse> ExecuteActionAsync(ActionRequest request)
         {
+			// Fetching values from the datastore
             var azureToken = request.DataStore.GetJson("AzureToken", "access_token");
             var subscription = request.DataStore.GetJson("SelectedSubscription", "SubscriptionId");
             var resourceGroup = request.DataStore.GetValue("SelectedResourceGroup");            
             var deploymentName = request.DataStore.GetValue("DeploymentName");
-            var isApi = request.DataStore.GetValue("IsApi"); //code can be removed if this is included in the app settings script
-            //var name = request.DataStore.GetValue("siteName");
-            var name = (isApi == "true")  ? request.DataStore.GetValue("siteName") + "-api" : request.DataStore.GetValue("siteName") ;
+			var name = request.DataStore.GetValue("webAppName") ;
             var repoURL = request.DataStore.GetValue("RepoURL");
             var branch = request.DataStore.GetValue("Branch");
             var project = request.DataStore.GetValue("Project");
             var armTemplateName = request.DataStore.GetValue("ArmTemplateName");                        
-            var location = "[resourceGroup().location]";
-            var config_web_name = "web";
-            var hostName = isApi == "true" ? "" : request.DataStore.GetValue("siteName"); //code can be removed if this is included in the app settings script
-
-            var SPNKey = request.DataStore.GetValue("SPNKey");
-            var tenantId = request.DataStore.GetValue("SPNTenantId"); ;
-            var SPNAppId = request.DataStore.GetValue("SPNAppId");
-            var InitialCatalog = request.DataStore.GetValue("InitialCatalog");
-            var ASServerUrl = request.DataStore.GetValue("ASServerUrl");
-
+            var location = "[resourceGroup().location]";            
+            
             string webAppArmDeploymentRelativePath = "Service/Arm/" + armTemplateName +".json";
             string storageAccountName = "solutiontemplate" + Path.GetRandomFileName().Replace(".", "").Substring(0, 8);
 
+			// Attaching parameters to the ARM Template
             var param = new AzureArmParameterGenerator();
             param.AddStringParam("resourcegroup", resourceGroup);
             param.AddStringParam("subscription", subscription);
             param.AddStringParam("siteName", name);
             param.AddStringParam("hostingPlanName", name);
-            param.AddStringParam("project", project);
-
-            //param.AddStringParam("SPNKey", SPNKey);
-            //param.AddStringParam("tenantId", tenantId);
-            //param.AddStringParam("SPNAppId", SPNAppId);
-            //param.AddStringParam("InitialCatalog", InitialCatalog);
-            //param.AddStringParam("ASDatabase", ASDatabase);
-            //param.AddStringParam("ASServerUrl", ASServerUrl);
-
-            if (isApi != "true") // code can be removed if this is included in the app settings script
-            {
-                param.AddStringParam("hostName", $"{hostName}.azurewebsites.net");
-                param.AddStringParam("SPNKey", SPNKey);
-                param.AddStringParam("tenantId", tenantId);
-                param.AddStringParam("SPNAppId", SPNAppId);
-                param.AddStringParam("APUrl", SPNAppId);
-            }
-            else
-            {
-                param.AddStringParam("SPNKey", SPNKey);
-                param.AddStringParam("tenantId", tenantId);
-                param.AddStringParam("SPNAppId", SPNAppId);
-                param.AddStringParam("InitialCatalog", InitialCatalog);
-                param.AddStringParam("ASServerUrl", ASServerUrl);
-            }
+            param.AddStringParam("project", project);		
             param.AddStringParam("repoURL", repoURL);
             param.AddStringParam("branch", branch);
             param.AddStringParam("location", location);
-            //param.AddStringParam("config_web_name", config_web_name);
-
+            
             var armTemplate = JsonUtility.GetJObjectFromJsonString(System.IO.File.ReadAllText(Path.Combine(request.ControllerModel.SiteCommonFilePath, webAppArmDeploymentRelativePath)));
             var armParamTemplate = JsonUtility.GetJObjectFromObject(param.GetDynamicObject());
             armTemplate.Remove("parameters");
@@ -87,7 +54,6 @@ namespace Microsoft.Deployment.Actions.AzureCustom.Common
 
             SubscriptionCloudCredentials creds = new TokenCloudCredentials(subscription, azureToken);
             ResourceManagementClient client = new ResourceManagementClient(creds);
-
 
             var deployment = new Azure.Management.Resources.Models.Deployment()
             {

@@ -17,7 +17,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
             string azureToken = request.DataStore.GetJson("AzureTokenAS", "access_token");
             string subscription = request.DataStore.GetJson("SelectedSubscription", "SubscriptionId");
             string name = request.DataStore.GetValue("ASServerName");
-            string location = request.DataStore.GetValue("ASLocation") ?? "westus";
+            string location = request.DataStore.GetValue("ASLocation") ?? "westus2";
 
             dynamic payload = new ExpandoObject();
             payload.name = name;

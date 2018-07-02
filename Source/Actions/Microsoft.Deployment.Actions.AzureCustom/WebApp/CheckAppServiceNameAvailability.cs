@@ -18,7 +18,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.WebApp
             string subscription = request.DataStore.GetJson("SelectedSubscription", "SubscriptionId");
             var resourceGroup = request.DataStore.GetValue("SelectedResourceGroup");
             string name = request.DataStore.GetValue("siteName");
-            string location = request.DataStore.GetValue("ASLocation") ?? "westus"; 
+            string location = request.DataStore.GetValue("ASLocation") ?? "westus2"; 
 
             // checking the app service hosting plan
             AzureHttpClient clientService = new AzureHttpClient(azureToken, subscription);

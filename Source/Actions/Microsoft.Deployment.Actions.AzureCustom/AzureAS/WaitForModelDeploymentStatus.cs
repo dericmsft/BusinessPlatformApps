@@ -38,7 +38,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
                 return new ActionResponse(ActionStatus.Failure, string.Empty, "AsDatabaseEmpty");
             }
 
-            var res = await GetRefreshList(azureToken, subscription, resourceGroup);
+            //var res = await GetRefreshList(azureToken, subscription, resourceGroup);
             Server server = null;
             try
             {
@@ -88,12 +88,12 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
             AzureHttpClient azClient = new AzureHttpClient(azureToken);
 
 
-            var resp = await azClient.ExecuteGenericRequestWithHeaderAsync(HttpMethod.Get, "https://westus.asazure.windows.net/servers/vfrortest20/models/SemanticModel/refreshes", "{}");
+            var resp = await azClient.ExecuteGenericRequestWithHeaderAsync(HttpMethod.Get, "https://westus2.asazure.windows.net/servers/vfrortest20/models/SemanticModel/refreshes", "{}");
         
 
 
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("https://westus.asazure.windows.net/servers/vfrortest20/models/SemanticModel/");
+            client.BaseAddress = new Uri("https://westus2.asazure.windows.net/servers/vfrortest20/models/SemanticModel/");
 
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", azureToken);

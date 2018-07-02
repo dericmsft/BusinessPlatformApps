@@ -28,9 +28,9 @@
       },
       "resources": [
         {
+          "apiVersion": "2015-08-01",
           "name": "appsettings",
           "type": "config",
-          "apiVersion": "2015-08-01",
           "dependsOn": [
             "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]"
           ],
@@ -38,8 +38,8 @@
             "displayName": "WebAppSettings"
           },
           "properties": {
-            "project": "[parameters('project')]",
-            "wpaDataAdapterHostName" :  "[parameters('hostName')]"
+            "project": "OnaWebApp/OnaWebApp.csproj",
+            "type": "Website"
           }
         },
         {
@@ -60,31 +60,28 @@
   ],
   "parameters": {
     "resourcegroup": {
-      "type": "String"
+      "type": "string"
     },
     "subscription": {
-      "type": "String"
+      "type": "string"
     },
     "siteName": {
-      "type": "String"
+      "type": "string"
     },
     "hostingPlanName": {
-      "type": "String"
+      "type": "string"
     },
     "project": {
-      "type": "String"
-    },
-    "hostName": {
-      "type": "String"
+      "type": "string"
     },
     "repoURL": {
-      "type": "String"
+      "type": "string"
     },
     "branch": {
-      "type": "String"
+      "type": "string"
     },
     "location": {
-      "type": "String",
+      "type": "string",
       "defaultValue": "[resourceGroup().location]"
     }
   }

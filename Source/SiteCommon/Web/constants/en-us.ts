@@ -686,6 +686,8 @@
     SUMMARY_SEND_MARKETING_MAIL: `Sign up to stay connected with information about new templates, enhancements, tips and tricks.`,
     SUMMARY_SUBTITLE: `Please verify that the information provided below is correct. If you are ready click Run to begin building the solution template. This will also download the pbix file which you can begin exploring as soon as the setup finishes.`,
     SUMMARY_TITLE: `Verify and run solution`,
+    TASK_PROGRESS_DETAILS: `The list of steps in this deployment are mentioned below.`,
+    TASK_PROGRESS_ERROR: `An error occurred during deployment. Scroll down for additional details`,
     TWITTER_CONNECT: 'Connect to Twitter',
     TWITTER_HANDLES_OPTIONAL: `Twitter Handles (optional):`,
     TWITTER_HANDLES_SUBTITLE: `We can enrich tweets with the tweet direction. If you would like to track whether a tweet was tweeted to or from a specific account, please explicitly list the Twitter Handles you are interested in.`,

@@ -1,0 +1,118 @@
+﻿<template>
+    <require from="../templates/bpst-link.html"></require>
+
+    <h1 class="st-title">${MS.Translate.PROGRESS_TITLE}</h1>
+    <p class="st-subtitle">${MS.Translate.PROGRESS_SUBTITLE}</p>
+
+    <!-- Progress -->
+    <div class="st-float st-text st-text-progress">
+        <!-- Base Experience -->
+        <div class="st-progress-bar-wrapper" if.bind="!MS.DeploymentService.isFinished">
+            <div class="st-progress-bar" css="width: ${MS.DeploymentService.progressPercentage}%;"></div>
+        </div>
+
+        <div class="st-progress" if.bind="!MS.DeploymentService.isFinished && MS.DeploymentService.executingIndex >= 0">
+            <span class="glyphicon pbi-glyph-circlering st-icon-progress"></span>
+            <span class="glyphicon pbi-glyph-close st-icon-progress st-icon-progress-close" if.bind="MS.DeploymentService.hasError"></span>
+            <span class="st-icon-progress ${MS.DeploymentService.executingIndex + 1 < 10 ? 'st-icon-progress-index' : 'st-icon-progress-index-large'}" if.bind="!MS.DeploymentService.hasError">${MS.DeploymentService.executingIndex + 1}</span>
+            <span class="semiboldFont st-progress-text">${MS.DeploymentService.executingAction.DisplayName}</span>
+        </div>
+
+        <div class="st-progress" if.bind="MS.DeploymentService.isFinished && !MS.DeploymentService.hasError">
+            <span class="glyphicon pbi-glyph-circlering st-icon-progress"></span>
+            <span class="powervisuals-glyph checkmark st-icon-progress st-icon-progress-check"></span>
+            <span class="semiboldFont st-progress-text">${successMessage}</span>
+        </div>
+
+        <div class="st-progress" if.bind="MS.DeploymentService.isFinished && !MS.DeploymentService.hasError">
+            <span class="semiboldFont st-progress-text">${successMessage2}</span>
+        </div>
+
+        <!-- Task Progress In Detail -->
+        <div class="st-progress" if.bind="viewmodel.showValidation || viewmodel.MS.ErrorService.message">
+            <span>${MS.Translate.TASK_PROGRESS_ERROR}</span>
+        </div>
+        <p class="st-subtitle" ">${MS.Translate.TASK_PROGRESS_DETAILS}</p>
+        <ul class="smallFontSize st-tabs st-progress" if.bind="!MS.DeploymentService.isFinished && MS.DeploymentService.executingIndex >= 0">
+            <li class="st-import-test" repeat.for="index of MS.DeploymentService.actions.length">
+                <span class="glyphicon pbi-glyph-circlefill st-icon-progress" if.bind="index < MS.DeploymentService.executingIndex"></span>
+                <span class="powervisuals-glyph checkmark st-icon st-icon-checkmark" if.bind="index < MS.DeploymentService.executingIndex" style="color:white; padding-left:10px"></span>
+                <span class="st-icon-progress ${index + 1 < 10 ? 'st-icon-progress-index' : 'st-icon-progress-index-large'}" if.bind="index >= MS.DeploymentService.executingIndex">${index+1}</span>
+                <span class="glyphicon pbi-glyph-circlering st-icon-progress" if.bind="index >= MS.DeploymentService.executingIndex"></span>                
+                <span class="semiboldFont st-progress-text"> ${MS.DeploymentService.actions[index].DisplayName}</span>
+
+            </li>
+        </ul>
+
+        <!-- Get Status -->
+        <ul class="smallFontSize st-tabs" if.bind="recordCounts && recordCounts.length > 0 && !MS.DeploymentService.hasError">
+            <li class="st-import" repeat.for="recordCount of recordCounts">
+                <span class="glyphicon glyph-small pbi-glyph-circlering st-icon st-loader-check" if.bind="isDataPullDone"></span>
+                <span class="powervisuals-glyph checkmark st-icon st-icon-checkmark st-loader-check" if.bind="isDataPullDone"></span>
+                <span class="st-loader st-loader-tiny st-loader-line" if.bind="!isDataPullDone"></span>
+                <span>${recordCount.EntityName} (${recordCount.Count}</span>
+                <span if.bind="recordCount.Count==1">${MS.Translate.COMMON_ROW}</span>
+                <span if.bind="recordCount.Count!=1">${MS.Translate.COMMON_ROWS}</span>
+                <span>)</span>
+            </li>
+        </ul>
+
+        <!-- Get Slice Status -->
+        <ul class="smallFontSize st-tabs" if.bind="sliceStatus && sliceStatus.length > 0 && !MS.DeploymentService.hasError">
+            <li class="st-import" repeat.for="slice of sliceStatus">
+                <span class="glyphicon glyph-small pbi-glyph-circlering st-icon st-loader-check" if.bind="isDataPullDone"></span>
+                <span class="powervisuals-glyph checkmark st-icon st-icon-checkmark st-loader-check" if.bind="isDataPullDone"></span>
+                <span class="st-loader st-loader-tiny st-loader-line" if.bind="!isDataPullDone"></span>
+                <span>${slice.Dataset} (${slice.Status})</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- PBIX Download -->
+    <div class="st-float" if.bind="MS.DeploymentService.isFinished && !MS.DeploymentService.hasError && !isUninstall">
+        <p class="st-privacy smallFontSize" if.bind="isPbixReady">
+            <a class="st-button-left" href.bind="pbixDownloadLink" target="${MS.HttpService.isOnPremise ? '_self' : '_blank'}">
+                <button class="primary">${MS.Translate.PROGRESS_DOWNLOAD_PBIX}</button>
+            </a>
+            <button class="primary" click.trigger="publishReport()" disabled.bind="MS.HttpService.isServiceBusy" if.bind="showPublishReport">${MS.Translate.PROGRESS_PUBLISH_PBIX}</button>
+            <a href.bind="publishReportLink" if.bind="publishReportLink" target="${MS.HttpService.isOnPremise ? '_self' : '_blank'}">
+                <button class="primary">${MS.Translate.PROGRESS_VIEW_PBIX}</button>
+            </a>
+            <bpst-link class="st-float" a-description="${downloadPbiText}" a-link="https://powerbi.microsoft.com/en-us/downloads/" a-link-text="${MS.Translate.COMMON_HERE}"></bpst-link>
+        </p>
+        <div class="smallFontSize" if.bind="!isPbixReady">
+            <span class="st-loader st-loader-tiny st-loader-pbi"></span>
+            <span>${MS.Translate.PROGRESS_GETTING_READY}</span>
+        </div>
+    </div>
+
+    <!-- PBIX Workspaces -->
+    <div class="st-modal-background" if.bind="showPBIWorkspaces"></div>
+    <div class="st-modal-background st-modal-wrapper" click.trigger="hidePBIWorkspaces()" if.bind="showPBIWorkspaces">
+        <div class="st-modal" click.trigger="$event.stopPropagation()">
+            <span class="glyphicon pbi-glyph-close st-contact-us-close" click.trigger="hidePBIWorkspaces()"></span>
+            <div class="st-modal-centered st-modal-heading">${MS.Translate.PROGRESS_WORKSPACES_TITLE}</div>
+            <div class="st-modal-centered st-text">${MS.Translate.PROGRESS_WORKSPACES_DESTINATION}</div>
+            <div class="st-modal-centered">
+                <select class="btn btn-default dropdown-toggle st-input" disabled.bind="MS.HttpService.isServiceBusy" value.bind="selectedPBIWorkspaceId">
+                    <option repeat.for="pbiWorkspace of pbiWorkspaces" value.bind="pbiWorkspace.id">${pbiWorkspace.name}</option>
+                </select>
+            </div>
+            <button class="primary" click.trigger="clickSelectWorkspace()">${MS.Translate.COMMON_SELECT}</button>
+        </div>
+    </div>
+
+    <!-- PowerApp Download -->
+    <div class="st-float" if.bind="MS.DeploymentService.isFinished && !MS.DeploymentService.hasError && !isUninstall && hasPowerApp">
+        <p class="smallFontSize" if.bind="isPowerAppReady">
+            <a class="st-float" href.bind="powerAppDownloadLink" target="${MS.HttpService.isOnPremise ? '_self' : '_blank'}">
+                <button class="primary">${MS.Translate.PROGRESS_VIEW_POWERAPP}</button>
+            </a>
+            <bpst-link class="st-float" a-description="${MS.Translate.PROGRESS_DOWNLOAD_POWERAPP_INFO}" a-link="https://powerapps.microsoft.com/en-us/downloads/" a-link-text="${MS.Translate.COMMON_HERE}"></bpst-link>
+        </p>
+        <div class="smallFontSize" if.bind="!isPbixReady">
+            <span class="st-loader st-loader-tiny st-loader-pbi"></span>
+            <span>${MS.Translate.PROGRESS_GETTING_READY_POWERAPP}</span>
+        </div>
+    </div>
+</template>

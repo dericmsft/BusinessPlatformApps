@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Deployment.Tests.Actions.TestHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.Deployment.Tests.Actions.AzureTests
 {
@@ -16,21 +17,32 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
         {
             var dataStore = await TestManager.GetDataStore();
 
-            //// Deploy Function
-            dataStore.AddToDataStore("DeploymentName", "WebAppDeploymentTest3");
-            dataStore.AddToDataStore("siteName", "KeyLinesTestSite5");
-            dataStore.AddToDataStore("RepoUrl", "https://github.com/v-preben/Demo.git");
-            dataStore.AddToDataStore("Branch", "Test");
-            dataStore.AddToDataStore("Project", "KeyLinesDemo2/KeyLinesDemo2.csproj");
-            dataStore.AddToDataStore("ArmTemplate", "AzureWebApp");
-            dataStore.AddToDataStore("IsApi", "false"); // code can be removed if this is included in the app settings script
-            dataStore.AddToDataStore("HostName", "keylinestestapi1.azurewebsites.net");
 
-            var response = TestManager.ExecuteAction("Microsoft-DeployAzureWebApp", dataStore);
+			//// Deploy Function
+			dataStore.AddToDataStore("DeploymentName", "WebApiDeploymentTest6");
+			dataStore.AddToDataStore("webAppName", "KeyLinesTestApi6");
+			dataStore.AddToDataStore("RepoUrl", "https://github.com/v-preben/Demo.git");
+			dataStore.AddToDataStore("Branch", "master");
+			dataStore.AddToDataStore("Project", "OnaWebApp/OnaWebApp.csproj");
+			dataStore.AddToDataStore("ArmTemplateName", "AzureWebApp");
+			dataStore.AddToDataStore("SettingName", "WebAppSettings");
+
+			JObject obj = new JObject(new JProperty("hostName", "TestHostNameValue"),
+										new JProperty("SPNKey", "TestSPNKeyValue"),
+										new JProperty("SPNAppId", "TestSPNAppIdValue"),
+										new JProperty("TenantId", "TestTenantId"),
+										new JProperty("APUrl","TestValue"));
+
+			dataStore.AddToDataStore("WebAppSettings", obj);
+
+
+			var response = TestManager.ExecuteAction("Microsoft-DeployAzureWebApp", dataStore);
             Assert.IsTrue(response.IsSuccess);
-            response = TestManager.ExecuteAction("Microsoft-WaitForArmDeploymentStatus", dataStore);
-            Assert.IsTrue(response.IsSuccess);
-        }
+			response = TestManager.ExecuteAction("Microsoft-WaitForArmDeploymentStatus", dataStore);
+			Assert.IsTrue(response.IsSuccess);
+			response = TestManager.ExecuteAction("Microsoft-DeployAzureWebAppApplicationSettings", dataStore);
+			Assert.IsTrue(response.IsSuccess);
+		}
 
         [TestMethod]
         public async Task CheckAppNameAvailability()

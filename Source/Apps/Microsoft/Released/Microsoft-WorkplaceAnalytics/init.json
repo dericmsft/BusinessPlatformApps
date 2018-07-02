@@ -2,7 +2,7 @@
   "Install": {
     "Pages": [
       {
-        "architectureDiagram": "dist/Apps/Microsoft/Released/Microsoft-WorkplaceAnalytics/Web/Images/WorkplaceAnalytics.png",
+        "architectureDiagram": "dist/Apps/Microsoft/Released/Microsoft-WorkplaceAnalytics/Web/Images/WpA_Architecture.png",
         "displayname": "Getting Started",
         "list1": [
           "$translate(INIT_GETTING_STARTED_AZURE_SUBSCRIPTION)",
@@ -37,42 +37,18 @@
         "subtitle": "$translate(INIT_BLOB_SELECTION_SUBTITLE)",
         "title": "$translate(INIT_BLOB_SELECTION_TITLE)"
       },
-      {
-        "displayname": "Databricks",
-        "name": "$SiteCommon$/pages-gallery/databricks.html",
-        "subtitle": "Use Azure Databricks for data analysis and processing",
-        "title": "Create Azure Databricks Workspace"
-      },
-      {
-        "displayname": "Databricks Token",
-        "name": "$SiteCommon$/pages-gallery/databricks-token.html",
-        "subtitle": "Use Azure Databricks token automating your data processing",
-        "title": "Generate Azure Databricks Token"
-      },
       //{
-      //  "displayname": "API Management",
-      //  "name": "$SiteCommon$/pages-gallery/api-management.html",
-      //  "subtitle": "$translate(INIT_API_MANAGEMENT_CONNECT_SUBTITLE)",
-      //  "title": "$translate(INIT_API_MANAGEMENT_CONNECT_TITLE)"
+      //  "displayname": "Databricks",
+      //  "name": "$SiteCommon$/pages-gallery/databricks.html",
+      //  "subtitle": "Use Azure Databricks for data analysis and processing",
+      //  "title": "Create Azure Databricks Workspace"
       //},
       //{
-      //  "displayname": "Target",
-      //  "isAzureSql": true,
-      //  "name": "$SiteCommon$/pages-gallery/sql.html",
-      //  "newSqlDatabase": "apiManagementDB",
-      //  "showAzureSql": false,
-      //  "showNewSqlOption": true,
-      //  "sqlInstance": "NewSql",
-      //  "subtitle": "$translate(INIT_SQL_SUBTITLE)",
-      //  "title": "$translate(INIT_SQL_TITLE)"
-      //},
-      //{
-      //  "name": "$SiteCommon$/pages-gallery/choose-analysis-server.html",
-      //  "displayname": "AAS",
-      //  "showDescription": true
-
-      //  //"ssasEnabled": "true"
-      //},
+      //  "displayname": "Databricks Token",
+      //  "name": "$SiteCommon$/pages-gallery/databricks-token.html",
+      //  "subtitle": "Use Azure Databricks token automating your data processing",
+      //  "title": "Generate Azure Databricks Token"
+      //},    
       {
         "displayname": "Login to Analysis Services",
         "name": "$SiteCommon$/pages-gallery/as-login.html",
@@ -105,11 +81,10 @@
       },
       {
         "datastoreEntriesToValidate": [
-          "AzureToken" //,
-          //"SqlConnectionString"
+          "AzureToken" 
         ],
         "displayname": "Deploy",
-        "name": "$SiteCommon$/pages-gallery/progress.html",
+        "name": "$SiteCommon$/pages-gallery/progress-detail.html",
         "uniqueId": "$save(this.MS.UtilityService.getUniqueId(10))",
         "uniqueIdFunction": "$save(this.MS.UtilityService.getUniqueId(10))",
         "SiteName": "$save(this.uniqueIdFunction)",
@@ -120,76 +95,60 @@
     ],
 
     "Actions": [
-      {
-        "displayname": "Deploying Azure Databricks Cluster",
-        "name": "Microsoft-DeployAzureDatabricksCluster"
-      },
-      {
-        "displayname": "Waiting for the deployment of Azure Databricks Cluster",
-        "name": "Microsoft-WaitForClusterDeploymentStatus"
-      },
-      {
-        "displayname": "Retrieve Notebook from Blob Storage",
-        "name": "Microsoft-GetASJsonBlob",
-        "blobUrl": "$run('https://' + this.MS.DataStore.getValue('StorageAccountName') + '.blob.core.windows.net/' + this.MS.DataStore.getValue('StorageAccountContainer') + '/Model/CreateInteractionsTest.py')",
-        "blobContentName": "NotebookContent"
-      },
-      {
-        "displayname": "Importing Notebook to Cluster",
-        "name": "Microsoft-ImportAzureDatabricksNotebook"
-      },
-      {
-        "displayname": "Creating Azure Databricks Job",
-        "name": "Microsoft-CreateAzureDatabricksJob"
-      },
-      {
-        "displayname": "Running Azure Databricks Job",
-        "name": "Microsoft-RunAzureDatabricksJob"
-      },
-      {
-        "displayname": "Waiting for Azure Databricks Job Run Status",
-        "name": "Microsoft-WaitForAzureDatabricksRunStatus"
-      },
+      //{
+      //  "displayname": "Deploying Azure Databricks Cluster",
+      //  "name": "Microsoft-DeployAzureDatabricksCluster"
+      //},
+      //{
+      //  "displayname": "Waiting for the deployment of Azure Databricks Cluster",
+      //  "name": "Microsoft-WaitForClusterDeploymentStatus"
+      //},
+      //{
+      //  "displayname": "Retrieve Notebook from Blob Storage",
+      //  "name": "Microsoft-GetASJsonBlob",
+      //  "blobUrl": "$run('https://' + this.MS.DataStore.getValue('StorageAccountName') + '.blob.core.windows.net/' + this.MS.DataStore.getValue('StorageAccountContainer') + '/Model/CreateInteractionsTest.py')",
+      //  "blobContentName": "NotebookContent"
+      //},
+      //{
+      //  "displayname": "Importing Notebook to Cluster",
+      //  "name": "Microsoft-ImportAzureDatabricksNotebook"
+      //},
+      //{
+      //  "displayname": "Creating Azure Databricks Job",
+      //  "name": "Microsoft-CreateAzureDatabricksJob"
+      //},
+      //{
+      //  "displayname": "Running Azure Databricks Job",
+      //  "name": "Microsoft-RunAzureDatabricksJob"
+      //},
+      //{
+      //  "displayname": "Waiting for Azure Databricks Job Run Status",
+      //  "name": "Microsoft-WaitForAzureDatabricksRunStatus"
+      //},
       {
         "displayname": "Retrieve Database Model from Blob Storage",
         "name": "Microsoft-GetASJsonBlob",
-        "blobUrl": "$run('https://' + this.MS.DataStore.getValue('StorageAccountName') + '.blob.core.windows.net/' + this.MS.DataStore.getValue('StorageAccountContainer') + '/Model/modelDefinition.json')",
+        "blobUrl": "$run('https://' + this.MS.DataStore.getValue('StorageAccountName') + '.blob.core.windows.net/' + this.MS.DataStore.getValue('StorageAccountContainer') + '/Model/modelDefinition1.json')",
         "blobContentName": "asModelDefinition"
       },
+      //{
+      //  "displayname": "Retrieve Person Historical Model from Blob Storage",
+      //  "name": "Microsoft-GetASJsonBlob",
+      //  "blobUrl": "$run('https://' + this.MS.DataStore.getValue('StorageAccountName') + '.blob.core.windows.net/' + this.MS.DataStore.getValue('StorageAccountContainer') + '/Model/personHistoricalColumns.json')",
+      //  "blobContentName": "asPersonHistoricalDefinition"
+      //},
       {
-        "displayname": "Retrieve Person Historical Model from Blob Storage",
-        "name": "Microsoft-GetASJsonBlob",
-        "blobUrl": "$run('https://' + this.MS.DataStore.getValue('StorageAccountName') + '.blob.core.windows.net/' + this.MS.DataStore.getValue('StorageAccountContainer') + '/Model/personHistoricalColumns.json')",
-        "blobContentName": "asPersonHistoricalDefinition"
-      },
-      {
-        "ASDatabase": "SemanticModel",
         "displayname": "$translate(INIT_ACTION_DEPLOYING_AS_MODEL)",
         "name": "Microsoft-DeployAzureASModelBlobStorage",
-        "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )",
-        //"SqlConnectionString": "$dsall(SqlConnectionString)[0]",
-        "modelFilePath": "Service/AzureAS/modelDefinition.json"
-      },
-      {
-        "DeploymentName": "ASFunction",
-        "displayname": "Waiting for model deployment",
         "ASDatabase": "SemanticModel",
-        "name": "Microsoft-WaitForModelDeploymentStatus",
-        "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )"
-      },
-      {
-        "DeploymentName": "ASFunction",
-        "displayname": "$translate(INIT_ACTION_DEPLOYING_AS_SCHEDULER)",
-        "FunctionName": "$save('asscheduler' + this.MS.DataStore.getValue('uniqueId'))",
-        "name": "Microsoft-DeployAzureFunction",
-        "RepoUrl": "https://github.com/dericmsft/AnalysisServicesRefresh",
         "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )",
-        "sku": "Standard"
+        "modelFilePath": "Service/AzureAS/modelDefinition1.json"
       },
       {
-        "DeploymentName": "ASFunction",
-        "displayname": "$translate(INIT_ACTION_WAITING_AS_SCHEDULER)",
-        "name": "Microsoft-WaitForArmDeploymentStatus",
+        "displayname": "Waiting for model deployment",
+        "name": "Microsoft-WaitForModelDeploymentStatus",
+        "DeploymentName": "ModelDeployment",
+        "ASDatabase": "SemanticModel",
         "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )"
       },
       {
@@ -206,53 +165,119 @@
         "ASDatabase": "SemanticModel"
       },
       {
-        "AppSettingKeys": {
-          "appId": "$ds(SPNAppId)",
-          "appKey": "$ds(SPNKey)",
-          "username": "$ds(SPNUser)",
-          "tenantId": "$ds(SPNTenantId)",
-          "asServer": "$ds(ASServerUrl)",
-          //"connStringSql": "$dsall(SqlConnectionString)[0]",
-          //"schema": "[pbist_apimgmt]",
-          "databaseAS": "SemanticModel",
-          "functionName": "$run('asscheduler' + this.MS.DataStore.getValue('uniqueId'))"
-        },
-
-        "DeploymentName": "ASFunction",
-        "displayname": "$translate(INIT_ACTION_SETTING_UP_AS_SCHEDULER)",
-        "name": "Microsoft-DeployAzureFunctionConnectionStrings",
-        "skip": "$run(this.MS.DataStore.getValue('ssasDisabled') )"
-      },
-      {
-        "DeploymentName": "ASFunction",
-        "RepoUrl": "https://github.com/v-preben/Demo.git",
         "displayname": "Waiting for Keyline API Deployment",
         "name": "Microsoft-DeployAzureWebApp",
-        "siteName": "$run( this.MS.DataStore.getValue('siteName') )",
-        "IsApi": "true",
+        "DeploymentName": "APIDeployment",
+        "RepoUrl": "https://github.com/v-preben/Demo.git",
+        "webAppName": "$run( this.MS.DataStore.getValue('siteName') + '-api' )",
         "Project": "WpASolutions.AnalyticsServiceAdapter/WpASolutions.AnalyticsServiceAdapter.csproj",
         "ArmTemplateName": "AzureWebApi",
-        "branch": "master",
-        "ASServerUrl": "$run( this.MS.DataStore.getValue('ASServerUrl') )",
-        //"ASDatabase": "$run( this.MS.DataStore.getValue('ASDatabase') )",
-        "InitialCatalog": "SemanticModel",
-        "SPNAppId": "$run( this.MS.DataStore.getValue('SPNAppId') )",
-        "tenantId": "$run( this.MS.DataStore.getValue('SPNTenantId') )",
-        "SPNKey": "$run( this.MS.DataStore.getValue('SPNKey') )"
+        "branch": "master"
       },
       {
-        "DeploymentName": "ASFunction2",
+        "displayname": "Waiting for Keyline API Deployment",
+        "name": "Microsoft-WaitForArmDeploymentStatus",
+        "DeploymentName": "APIDeployment"
+      },
+      {
+        "ApiAppSettings": {
+          "Server": "$run( this.MS.DataStore.getValue('ASServerName') )",
+          "AppId": "$run( this.MS.DataStore.getValue('SPNAppId') )",
+          "AppKey": "$run( this.MS.DataStore.getValue('SPNKey') )",
+          "Model": "SemanticModel",
+          "AzureAd:TenantId": "$run( this.MS.DataStore.getValue('SPNTenantId') )"
+        },
+        "displayname": "Waiting for API Application Settings Deployment",
+        "name": "Microsoft-DeployAzureWebAppApplicationSettings",
+        "DeploymentName": "ApiApplicationSettingsDeployment",
+        "SettingName": "ApiAppSettings",
+        "webAppName": "$run( this.MS.DataStore.getValue('siteName') + '-api' )"
+      },
+      {
+        "DeploymentName": "WebAppDeployment",
         "RepoUrl": "https://github.com/v-preben/Demo.git",
         "displayname": "Waiting for Keyline Web UI",
         "name": "Microsoft-DeployAzureWebApp",
-        "siteName": "$run( this.MS.DataStore.getValue('siteName') )",
-        "IsApi": "false",
-        "Project": "KeyLinesDemo2/KeyLinesDemo2.csproj",
+        "webAppName": "$run( this.MS.DataStore.getValue('siteName') )",
+        "Project": "OnaWebApp/OnaWebApp.csproj",
         "ArmTemplateName": "AzureWebApp",
-        "branch": "master",
-        "SPNAppId": "$run( this.MS.DataStore.getValue('SPNAppId') )",
-        "tenantId": "$run( this.MS.DataStore.getValue('SPNTenantId') )"
+        "branch": "master"
       },
+      {
+        "displayname": "Waiting for Keyline Web UI",
+        "name": "Microsoft-WaitForArmDeploymentStatus",
+        "DeploymentName": "WebAppDeployment"
+      },
+      {
+        "WebAppSettings": {
+          "hostName": "$run( this.MS.DataStore.getValue('siteName') + '.azurewebsites.net' )",
+          "wpaDataAdapterHostName": "$run( this.MS.DataStore.getValue('siteName') + '.azurewebsites.net' )",
+          "SPNKey": "$run( this.MS.DataStore.getValue('SPNKey') )",
+          "SPNAppId": "$run( this.MS.DataStore.getValue('SPNAppId') )",
+          "APUrl": "$run( this.MS.DataStore.getValue('SPNAppId') )",
+          "TenantId": "$run( this.MS.DataStore.getValue('SPNTenantId') )"
+        },
+        "displayname": "Waiting for Web App Application Settings Deployment",
+        "name": "Microsoft-DeployAzureWebAppApplicationSettings",
+        "DeploymentName": "WebAppApplicationsSettingsDeployment",
+        "SettingName": "WebAppSettings"
+      }
+      //END OF DEPLOYMENT
+      //{
+      //  "DeploymentName": "Function",
+      //  "displayname": "$translate(INIT_ACTION_APIM_DEPLOY_FUNCTION)",
+      //  "FunctionName": "$save(this.MS.DataStore.getValue('uniqueIdFunction'))",
+      //  "name": "Microsoft-DeployAzureFunction",
+      //  "RepoUrl": "https://github.com/juluczni/AzureFunctionsNewsTemplate",
+      //  "Branch": "apim"
+      //},
+      //{
+      //  "DeploymentName": "Function",
+      //  "displayname": "$translate(INIT_ACTION_APIM_DEPLOY_FUNCTION_VALIDATING)",
+      //  "name": "Microsoft-WaitForArmDeploymentStatus"
+      //} //,
+      //{
+      //  "AppSettingKeys": {
+      //    "TemplatesSQL": "$dsall(SqlConnectionString)[0]"
+      //  },
+
+      //  "DeploymentName": "FunctionSettings",
+      //  "displayname": "$translate(INIT_ACTION_APIM_DEPLOY_FUNCTION_SETTINGS)",
+      //  "name": "Microsoft-DeployAzureFunctionConnectionStrings"
+      //}
+      //{
+      //  "DeploymentName": "ASFunction",
+      //  "displayname": "$translate(INIT_ACTION_DEPLOYING_AS_SCHEDULER)",
+      //  "FunctionName": "$save('asscheduler' + this.MS.DataStore.getValue('uniqueId'))",
+      //  "name": "Microsoft-DeployAzureFunction",
+      //  "RepoUrl": "https://github.com/dericmsft/AnalysisServicesRefresh",
+      //  "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )",
+      //  "sku": "Standard"
+      //},
+      //{
+      //  "DeploymentName": "ASFunction",
+      //  "displayname": "$translate(INIT_ACTION_WAITING_AS_SCHEDULER)",
+      //  "name": "Microsoft-WaitForArmDeploymentStatus",
+      //  "skip": "$run( this.MS.DataStore.getValue('ssasDisabled') )"
+      //},
+      //{
+      //  "AppSettingKeys": {
+      //    "appId": "$ds(SPNAppId)",
+      //    "appKey": "$ds(SPNKey)",
+      //    "username": "$ds(SPNUser)",
+      //    "tenantId": "$ds(SPNTenantId)",
+      //    "asServer": "$ds(ASServerUrl)",
+      //    //"connStringSql": "$dsall(SqlConnectionString)[0]",
+      //    //"schema": "[pbist_apimgmt]",
+      //    "databaseAS": "SemanticModel",
+      //    "functionName": "$run('asscheduler' + this.MS.DataStore.getValue('uniqueId'))"
+      //  },
+
+      //  "DeploymentName": "ASFunction",
+      //  "displayname": "$translate(INIT_ACTION_SETTING_UP_AS_SCHEDULER)",
+      //  "name": "Microsoft-DeployAzureFunctionConnectionStrings",
+      //  "skip": "$run(this.MS.DataStore.getValue('ssasDisabled') )"
+      //},
       //{
       //  "DeploymentName": "KeyVault",
       //  //"RepoUrl": "https://github.com/v-preben/Demo.git",
@@ -267,29 +292,6 @@
       //  //"SqlConnectionString": "$dsall(SqlConnectionString)[0]",
       //  "modelFilePath": "Service/AzureAS/modelDefinition.json"
       //},
-      // Finish AS Deployment
-      {
-        "DeploymentName": "Function",
-        "displayname": "$translate(INIT_ACTION_APIM_DEPLOY_FUNCTION)",
-        "FunctionName": "$save(this.MS.DataStore.getValue('uniqueIdFunction'))",
-        "name": "Microsoft-DeployAzureFunction",
-        "RepoUrl": "https://github.com/juluczni/AzureFunctionsNewsTemplate",
-        "Branch": "apim"
-      },
-      {
-        "DeploymentName": "Function",
-        "displayname": "$translate(INIT_ACTION_APIM_DEPLOY_FUNCTION_VALIDATING)",
-        "name": "Microsoft-WaitForArmDeploymentStatus"
-      } //,
-      //{
-      //  "AppSettingKeys": {
-      //    "TemplatesSQL": "$dsall(SqlConnectionString)[0]"
-      //  },
-
-      //  "DeploymentName": "FunctionSettings",
-      //  "displayname": "$translate(INIT_ACTION_APIM_DEPLOY_FUNCTION_SETTINGS)",
-      //  "name": "Microsoft-DeployAzureFunctionConnectionStrings"
-      //}
     ]
   }
 }

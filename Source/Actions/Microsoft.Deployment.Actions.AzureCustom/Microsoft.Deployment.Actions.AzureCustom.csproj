@@ -337,6 +337,7 @@
     <Compile Include="Twitter\ValidateTwitterAccount.cs" />
     <Compile Include="Twitter\VerifyTwitterConnection.cs" />
     <Compile Include="WebApp\CheckAppServiceNameAvailability.cs" />
+    <Compile Include="WebApp\DeployAzureWebAppApplicationSettings.cs" />
     <Compile Include="WebApp\DeployAzureWebApp.cs" />
     <Compile Include="Wpa\Utilities\ModelParser.cs" />
   </ItemGroup>

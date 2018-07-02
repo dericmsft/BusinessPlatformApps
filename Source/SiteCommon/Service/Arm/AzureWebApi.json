@@ -39,11 +39,8 @@
           },
           "properties": {
             "project": "[parameters('project')]",
-            "SPNKey": "[parameters('SPNKey')]",
-            "tenantId": "[parameters('tenantId')]",
-            "SPNAppId": "[parameters('SPNAppId')]",
-            "InitialCatalog": "[parameters('InitialCatalog')]",
-            "ASServerUrl": "[parameters('ASServerUrl')]"
+            "type": "API",
+            "Location": "[parameters('location')]"
           }
         },
         {
@@ -60,7 +57,7 @@
           }
         }
       ]
-    },
+    }
     //{
     //  "comments": "Generalized from resource: X",
     //  "type": "Microsoft.Web/sites/config",
@@ -81,48 +78,29 @@
   ],
     "parameters": {
     "resourcegroup": {
-      "type": "String"
+      "type": "string"
     },
     "subscription": {
-      "type": "String"
+      "type": "string"
     },
     "siteName": {
-      "type": "String"
+      "type": "string"
     },
     "hostingPlanName": {
-      "type": "String"
+      "type": "string"
     },
     "project": {
-      "type": "String"
+      "type": "string"
     },
     "repoURL": {
-      "type": "String"
+      "type": "string"
     },
     "branch": {
-      "type": "String"
+      "type": "string"
     },
     "location": {
-      "type": "String",
+      "type": "string",
       "defaultValue": "[resourceGroup().location]"
-    },
-    "SPNKey": {
-      "type": "String"
-    },
-    "tenantId": {
-      "type": "String"
-    },
-    "SPNAppId": {
-      "type": "String"
-    },
-    "InitialCatalog": {
-      "type": "String"
-    },
-    "ASServerUrl": {
-      "type": "String"
-    }//,
-    //"config_web_name": {
-    //  "defaultValue": "web",
-    //  "type": "String"
-    //}
+    }
   }
 }
