@@ -19,8 +19,8 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
             var dataStore = await TestManager.GetDataStore();
 
             //// Deploy Function
-            dataStore.AddToDataStore("DeploymentName", "WebApiDeploymentTest5");
-            dataStore.AddToDataStore("webAppName", "KeyLinesTestApi5");
+            dataStore.AddToDataStore("DeploymentName", "WebApiDeploymentTest6");
+            dataStore.AddToDataStore("webAppName", "KeyLinesTestApi6");
             dataStore.AddToDataStore("RepoUrl", "https://github.com/v-preben/Demo.git");
             dataStore.AddToDataStore("Branch", "master");
             dataStore.AddToDataStore("Project", "WpASolutions.AnalyticsServiceAdapter/WpASolutions.AnalyticsServiceAdapter.csproj");
@@ -45,7 +45,7 @@ namespace Microsoft.Deployment.Tests.Actions.AzureTests
 
 			var response = TestManager.ExecuteAction("Microsoft-DeployAzureWebApp", dataStore);
 			Assert.IsTrue(response.IsSuccess);
-			response = TestManager.ExecuteAction("Microsoft-WaitForArmDeploymentStatus", dataStore);
+			response = TestManager.ExecuteAction("Microsoft-WaitForWpaArmDeploymentStatus", dataStore);
 			Assert.IsTrue(response.IsSuccess);
 			response = TestManager.ExecuteAction("Microsoft-DeployAzureWebAppApplicationSettings", dataStore);
 			Assert.IsTrue(response.IsSuccess);

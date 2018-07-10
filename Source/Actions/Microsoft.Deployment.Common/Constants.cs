@@ -9,7 +9,7 @@
         public const string AppsPath = "Apps";
         public const string AppsWebPath = "Web";
         public const string SiteCommonPath = "SiteCommon";
-        public const string ServiceUrl = "https://appsource-service.azurewebsites.net/";
+        public const string ServiceUrl = "https://appsourceservicelatest.azurewebsites.net/";
 
         public const string ActionsPath = "Actions";
         public const string InitFile = "init.json";

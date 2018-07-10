@@ -37,8 +37,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
             {
                 return new ActionResponse(ActionStatus.Failure, string.Empty, "AsDatabaseEmpty");
             }
-
-            //var res = await GetRefreshList(azureToken, subscription, resourceGroup);
+            
             Server server = null;
             try
             {
@@ -80,42 +79,6 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureAS
             {
                 server?.Dispose();
             }
-        }
-
-        private async Task<string> GetRefreshList(string azureToken, string subscription, string resourceGroup)
-        {
-
-            AzureHttpClient azClient = new AzureHttpClient(azureToken);
-
-
-            var resp = await azClient.ExecuteGenericRequestWithHeaderAsync(HttpMethod.Get, "https://westus2.asazure.windows.net/servers/vfrortest20/models/SemanticModel/refreshes", "{}");
-        
-
-
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("https://westus2.asazure.windows.net/servers/vfrortest20/models/SemanticModel/");
-
-
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", azureToken);
-            
-
-            HttpResponseMessage response;
-            //response.EnsureSuccessStatusCode();
-
-            //Uri location = response.Headers.Location;
-            //Console.WriteLine(response.Headers.Location);
-            string output = "";
-
-            response = await client.GetAsync("refreshes");
-            if (response.IsSuccessStatusCode)
-            {
-                output = await response.Content.ReadAsStringAsync();
-            }
-
-            Console.Clear();
-            Console.WriteLine(output);
-
-            return output;
-        }
+        }       
     }
 }

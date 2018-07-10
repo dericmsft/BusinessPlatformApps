@@ -37,18 +37,18 @@
         "subtitle": "$translate(INIT_BLOB_SELECTION_SUBTITLE)",
         "title": "$translate(INIT_BLOB_SELECTION_TITLE)"
       },
-      //{
-      //  "displayname": "Databricks",
-      //  "name": "$SiteCommon$/pages-gallery/databricks.html",
-      //  "subtitle": "Use Azure Databricks for data analysis and processing",
-      //  "title": "Create Azure Databricks Workspace"
-      //},
-      //{
-      //  "displayname": "Databricks Token",
-      //  "name": "$SiteCommon$/pages-gallery/databricks-token.html",
-      //  "subtitle": "Use Azure Databricks token automating your data processing",
-      //  "title": "Generate Azure Databricks Token"
-      //},    
+      {
+        "displayname": "Databricks",
+        "name": "$SiteCommon$/pages-gallery/databricks.html",
+        "subtitle": "Use Azure Databricks for data analysis and processing",
+        "title": "Create Azure Databricks Workspace"
+      },
+      {
+        "displayname": "Databricks Token",
+        "name": "$SiteCommon$/pages-gallery/databricks-token.html",
+        "subtitle": "Use Azure Databricks token automating your data processing",
+        "title": "Generate Azure Databricks Token"
+      },    
       {
         "displayname": "Login to Analysis Services",
         "name": "$SiteCommon$/pages-gallery/as-login.html",
@@ -95,36 +95,36 @@
     ],
 
     "Actions": [
-      //{
-      //  "displayname": "Deploying Azure Databricks Cluster",
-      //  "name": "Microsoft-DeployAzureDatabricksCluster"
-      //},
-      //{
-      //  "displayname": "Waiting for the deployment of Azure Databricks Cluster",
-      //  "name": "Microsoft-WaitForClusterDeploymentStatus"
-      //},
-      //{
-      //  "displayname": "Retrieve Notebook from Blob Storage",
-      //  "name": "Microsoft-GetASJsonBlob",
-      //  "blobUrl": "$run('https://' + this.MS.DataStore.getValue('StorageAccountName') + '.blob.core.windows.net/' + this.MS.DataStore.getValue('StorageAccountContainer') + '/Model/CreateInteractionsTest.py')",
-      //  "blobContentName": "NotebookContent"
-      //},
-      //{
-      //  "displayname": "Importing Notebook to Cluster",
-      //  "name": "Microsoft-ImportAzureDatabricksNotebook"
-      //},
-      //{
-      //  "displayname": "Creating Azure Databricks Job",
-      //  "name": "Microsoft-CreateAzureDatabricksJob"
-      //},
-      //{
-      //  "displayname": "Running Azure Databricks Job",
-      //  "name": "Microsoft-RunAzureDatabricksJob"
-      //},
-      //{
-      //  "displayname": "Waiting for Azure Databricks Job Run Status",
-      //  "name": "Microsoft-WaitForAzureDatabricksRunStatus"
-      //},
+      {
+        "displayname": "Deploying Azure Databricks Cluster",
+        "name": "Microsoft-DeployAzureDatabricksCluster"
+      },
+      {
+        "displayname": "Waiting for the deployment of Azure Databricks Cluster",
+        "name": "Microsoft-WaitForClusterDeploymentStatus"
+      },
+      {
+        "displayname": "Retrieve Notebook from Blob Storage",
+        "name": "Microsoft-GetASJsonBlob",
+        "blobUrl": "$run('https://' + this.MS.DataStore.getValue('StorageAccountName') + '.blob.core.windows.net/' + this.MS.DataStore.getValue('StorageAccountContainer') + '/Model/CreateInteractionsTest.py')",
+        "blobContentName": "NotebookContent"
+      },
+      {
+        "displayname": "Importing Notebook to Cluster",
+        "name": "Microsoft-ImportAzureDatabricksNotebook"
+      },
+      {
+        "displayname": "Creating Azure Databricks Job",
+        "name": "Microsoft-CreateAzureDatabricksJob"
+      },
+      {
+        "displayname": "Running Azure Databricks Job",
+        "name": "Microsoft-RunAzureDatabricksJob"
+      },
+      {
+        "displayname": "Waiting for Azure Databricks Job Run Status",
+        "name": "Microsoft-WaitForAzureDatabricksRunStatus"
+      },
       {
         "displayname": "Retrieve Database Model from Blob Storage",
         "name": "Microsoft-GetASJsonBlob",
@@ -176,7 +176,7 @@
       },
       {
         "displayname": "Waiting for Keyline API Deployment",
-        "name": "Microsoft-WaitForArmDeploymentStatus",
+        "name": "Microsoft-WaitForWpaArmDeploymentStatus",
         "DeploymentName": "APIDeployment"
       },
       {
@@ -205,7 +205,7 @@
       },
       {
         "displayname": "Waiting for Keyline Web UI",
-        "name": "Microsoft-WaitForArmDeploymentStatus",
+        "name": "Microsoft-WaitForWpaArmDeploymentStatus",
         "DeploymentName": "WebAppDeployment"
       },
       {

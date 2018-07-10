@@ -23,7 +23,7 @@ namespace Microsoft.Deployment.Actions.AzureCustom.AzureDatabricks
             string managedResourceGroupId = request.DataStore.GetValue("ManagedResourceGroupId");
 
             var redirectUri = request.Info.WebsiteRootUrl + Constants.WebsiteRedirectPath;
-            var authUri = $"https://westus.azuredatabricks.net/aad/auth?has=&Workspace=/subscriptions/{subscription}/resourceGroups/{resourceGroup}/providers/Microsoft.Databricks/workspaces/{workspaceName}&WorkspaceResourceGroupUri={managedResourceGroupId}";
+            var authUri = $"https://westus2.azuredatabricks.net/aad/auth?has=&Workspace=/subscriptions/{subscription}/resourceGroups/{resourceGroup}/providers/Microsoft.Databricks/workspaces/{workspaceName}&WorkspaceResourceGroupUri={managedResourceGroupId}";
             //var authUri = "https://westus.azuredatabricks.net/aad/auth?has=&Workspace=/subscriptions/a72113c3-11f8-4a99-979d-70ef134cb5d5/resourceGroups/vfrordatabrickstest5-rg/providers/Microsoft.Databricks/workspaces/vfrordatabrickstest5&WorkspaceResourceGroupUri=/subscriptions/a72113c3-11f8-4a99-979d-70ef134cb5d5/resourceGroups/databricks-rg-vfrordatabrickstest5-7iyo5r4c2tc4g";
             return new ActionResponse(ActionStatus.Success, JsonUtility.GetJObjectFromStringValue(authUri.ToString()));
         }

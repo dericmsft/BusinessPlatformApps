@@ -23,7 +23,7 @@ export class HttpService {
         } else {
             let url = window.location.href;
             if (url.includes('appsource')) {
-                this.baseUrl = 'https://appsource-service.azurewebsites.net/api/';
+                this.baseUrl = 'https://appsourceservicelatest.azurewebsites.net/api/';
             } else {
                 url = url.replace('bpst', 'bpstservice');
                 let splitUrls = url.split('/');
